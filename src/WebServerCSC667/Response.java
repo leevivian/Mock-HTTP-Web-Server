@@ -14,7 +14,6 @@ public class Response {
 
     }
 
-    public send(OutputStream out){
-
-    }
+    //public send(OutputStream out){
+    //}
 }
