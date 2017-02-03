@@ -1,3 +1,5 @@
+package WebServerCSC667;
+
 import java.util.Dictionary;
 
 /**
