@@ -1,5 +1,8 @@
 package WebServerCSC667;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -17,12 +20,23 @@ public class Request {
         parse();
     }
     public Request (Stream client){
+        String thisLine;
+        String streamToString = client.iterator().next().toString();
+        StringReader readString = new StringReader(streamToString);
+        BufferedReader readText = new BufferedReader(readString);
 
+        try {
+            while ((thisLine = readText.readLine()) != null) {
+                myStr = myStr + thisLine + "\n";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         parse();
     }
     public void parse (){
         Boolean contentLength = false;
-        String[] arr = (myStr.toString()).split("\n");
+        String[] arr = (myStr.toString()).split("[\n\r]+");
 
         // HTTP_METHOD IDENTIFIER HTTP_VERSION
         String[] firstLine = arr[0].split(" ");
@@ -38,25 +52,25 @@ public class Request {
             index++;
         }
 
-        System.out.println(headers);
 
         if (headers.containsKey("Content-Length")) {
             body = arr[index + 1];
         }
 
-        System.out.println(body);
     }
-    // accessors
-    // get something from ConfigurationReader?
 
+    // accessors
 
     public static void main (String args[]) {
-        Request myReq = new Request("GET /docs/index.html HTTP/1.1\n" +
-                                    "Host: www.nowhere123.com\n" +
-                                    "Content-Length: 11\n" +
-                                    "    \n" +
-                                    "Hello World");
+        String test = "GET /docs/index.html HTTP/1.1\n" +
+                "Host: www.nowhere123.com\n" +
+                "Content-Length: 11\n" +
+                "    \n" +
+                "Hello World";
 
-        System.out.println("head" + myReq.headers);
+        Request myReq = new Request(Stream.of(test));
+
+        System.out.println("Headers: " + myReq.headers + "\nBody: " + myReq.body);
+
     }
 }
