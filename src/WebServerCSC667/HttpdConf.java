@@ -38,7 +38,6 @@ public class HttpdConf extends ConfigurationReader{
     public HttpdConf(String fileName) {
         setFile (new File (fileName));
         load();
-        parse();
     }
 
     public void load() {
