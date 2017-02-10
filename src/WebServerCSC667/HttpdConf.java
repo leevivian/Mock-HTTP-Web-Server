@@ -5,13 +5,10 @@ import java.util.HashMap;
 
 public class HttpdConf extends ConfigurationReader{
 
-    //TODO:
-    //CREATE HASH MAP FOR EACH VARIABLE
     private HashMap <String, String> aliases = new HashMap<>();
     private HashMap <String, String> scriptAliases = new HashMap<>();
     private HashMap <String, String> httpdConfig = new HashMap<>();
     private String documentRoot = "";
-
     private String ServerRoot = "";
     private String logFileLocaction = "";
     private int port = 80;
@@ -22,18 +19,15 @@ public class HttpdConf extends ConfigurationReader{
     public String getServerRoot() {
         return ServerRoot;
     }
-
     public String getLogFileLocaction() {
         return logFileLocaction;
     }
-
     public String getDocumentRoot() {
         return documentRoot;
     }
     public HashMap<String, String> getAliases() {
         return aliases;
     }
-
     public HashMap<String, String> getScriptAliases() {
         return scriptAliases;
     }
