@@ -1,45 +1,94 @@
 package WebServerCSC667;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
+/**
+ * Created by rain2 on 2/3/2017.
+ */
 public class Resource {
 
-    private File myFile;
-    private InputStream is;
+    private URI myURI;
+    private HttpdConf myConf;
+    private String alias;
+    private String myURIString;
+    private String docuRoot;
 
-    public Resource (String uri, HttpdConf config){
+    private File file;
+    private String myPath;
+
+    // For test
+    static String decodeMe;
+
+    public Resource (String uri, HttpdConf config) throws URISyntaxException{
+
+        myConf = config;
+        myURIString = uri;
+
+        // check if there are aliases
+        if ((alias = config.getAliases().get(uri)) != null) {
+                myURIString = alias;
+        }
+         else if (isScript()) {   // also check if ScriptAlias exists
+
+            myURIString = config.getScriptAliases().get(uri);
+        }
+
+        // ******* RESOLVE PATH *******
+        docuRoot = config.getDocumentRoot();
+        myPath = docuRoot + myURIString;
+
+        // If the path is not a file, append DirIndex
+        file = new File(myPath);
+        if (!file.isFile()) {
+            myPath += "index.html";
+        }
+
+        // Get absolute path?
+        myPath = absolutePath();
+
         try {
-            // Construct a URI by parsing the given string, uri
-            URI myURI = new URI(uri);
-            // Create new file instance by converting the given file: URI into an abstract pathname
-            myFile = new File (myURI);
-        } catch (URISyntaxException e) {
+            // needs encoding otherwise - URISyntaxException: Illegal character in path
+            myURI = new URI(URLEncoder.encode(myPath, "UTF8"));
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        try {
-            // Return class object with the class with the given string name
-            Class myClass = Class.forName("Resource");
-            // get class loader
-            ClassLoader classLoader = myClass.getClassLoader();
-            // Finds resource with the given name as an InputStream
-            is = classLoader.getResourceAsStream(absolutePath());
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
     }
+
     public String absolutePath(){
-        return myFile.getAbsolutePath();
+        return file.getAbsolutePath();
     }
+
     public boolean isScript(){
-        // if Script-Alias exists, then return true
+
+        if (myConf.getScriptAliases() != null) {
+            return true;
+        }
         return false;
     }
 
     public boolean isProtected(){
         return false;
     }
+
+    public static void main (String args[]) throws URISyntaxException{
+        HttpdConf myHttpdConf = new HttpdConf("httpd.conf");
+
+        // test by using script alias URI
+        Resource myRes = new Resource("/cgi-bin/", myHttpdConf);
+        try {
+            decodeMe = URLDecoder.decode(myRes.myURI.toString(), "UTF8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(decodeMe);
+    }
+
+
+
 }
