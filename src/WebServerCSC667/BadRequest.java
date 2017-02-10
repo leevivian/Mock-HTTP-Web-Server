@@ -1,7 +1,10 @@
 package WebServerCSC667;
 
-/**
- * Created by rain2 on 2/3/2017.
- */
 public class BadRequest extends Exception{
+
+    String statusCode;
+    public BadRequest() {
+        statusCode = "400";
+    }
+
 }

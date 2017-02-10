@@ -11,15 +11,15 @@ public class Request {
     private String body;
     private String verb;
     private String httpVersion;
-    private HashMap<String, String> headers;
+    private HashMap headers;
 
     private Object myStr;
 
-    public Request (String test){
+    public Request (String test) throws BadRequest{
         myStr = test;
         parse();
     }
-    public Request (Stream client){
+    public Request (Stream client) throws BadRequest{
         String thisLine;
         String streamToString = client.iterator().next().toString();
         StringReader readString = new StringReader(streamToString);
@@ -34,8 +34,8 @@ public class Request {
         }
         parse();
     }
-    public void parse (){
-        Boolean contentLength = false;
+    public void parse() throws BadRequest{
+        boolean contentLength = false;
         String[] arr = (myStr.toString()).split("[\n\r]+");
 
         // HTTP_METHOD IDENTIFIER HTTP_VERSION
@@ -45,7 +45,7 @@ public class Request {
         httpVersion = firstLine[2];
 
         int index = 1;
-        headers = new HashMap<>();
+        headers = new HashMap();
         while (arr[index].contains(": ")) { // or while != " " ?
             String[] headersArr = arr[index].split(": ");
             headers.put(headersArr[0], headersArr[1]);
@@ -61,7 +61,7 @@ public class Request {
 
     // accessors
 
-    public static void main (String args[]) {
+    public static void main (String args[]) throws BadRequest{
         String test = "GET /docs/index.html HTTP/1.1\n" +
                 "Host: www.nowhere123.com\n" +
                 "Content-Length: 11\n" +
