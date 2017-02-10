@@ -1,36 +1,75 @@
 package WebServerCSC667;
 
+
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
- * Created by Vivian on 2/3/17.
+ * Created by rain2 on 2/7/2017.
  */
-
 public class ConfigurationReader {
 
     private File file;
+    private String[] parsedFile;
+    private int parsedFileIndex = 0;
 
-    public static void main(String args[]) {
-        System.out.println("Yo");
+    public ConfigurationReader() {
     }
-
     public ConfigurationReader(String filename) {
-
-
+        //Creates a new File instance by converting the given pathname string into an abstract pathname.
+        file = new File(filename);
+        load();
     }
 
     public boolean hasMoreLines() {
-
-        return false;
+        if (parsedFile.length  > parsedFileIndex){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public String nextLine() {
+    public void setFile(File file) {
+        this.file = file;
+    }
 
-        return "test";
+    public String nextLine(){
+        if (hasMoreLines() == true) {
+            String temp = parsedFile[parsedFileIndex];
+            parsedFileIndex++;
+            //System.out.println("nextLine TRUE");
+            return temp;
+        }
+        //System.out.println("nextLine FALSE");
+        return null;
     }
 
     public void load() {
+        try {
+            String fileContents = new String(Files.readAllBytes(Paths.get("conf/"+file)));
+            parse(fileContents);
+        } catch (IOException e) {
+            System.out.println("failed to read file");
+            e.printStackTrace();
+        }
+    }
 
+    public void parse(String fileContents){
+        parsedFile = fileContents.split("\n");
+    }
+
+    public static void main(String args[]) {
+        ConfigurationReader test = new ConfigurationReader("httpd.conf");
+        System.out.println("hello");
+        System.out.println(test);
+        for (int i = 0; i <test.parsedFile.length; i++){
+            System.out.println(test.parsedFile[i]);
+
+        }
+        //System.out.println(test.nextLine());
     }
 
 }

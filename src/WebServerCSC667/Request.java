@@ -1,25 +1,76 @@
 package WebServerCSC667;
 
-import java.util.Dictionary;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.*;
+import java.util.stream.Stream;
 
-/**
- * Created by rain2 on 2/3/2017.
- */
 public class Request {
-    private String url;
-    //private ? body;
+    private String uri;
+    private String body;
     private String verb;
     private String httpVersion;
-    private Dictionary headers;
+    private HashMap<String, String> headers;
+
+    private Object myStr;
 
     public Request (String test){
-
+        myStr = test;
+        parse();
     }
     public Request (Stream client){
+        String thisLine;
+        String streamToString = client.iterator().next().toString();
+        StringReader readString = new StringReader(streamToString);
+        BufferedReader readText = new BufferedReader(readString);
 
+        try {
+            while ((thisLine = readText.readLine()) != null) {
+                myStr = myStr + thisLine + "\n";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        parse();
     }
     public void parse (){
+        Boolean contentLength = false;
+        String[] arr = (myStr.toString()).split("[\n\r]+");
+
+        // HTTP_METHOD IDENTIFIER HTTP_VERSION
+        String[] firstLine = arr[0].split(" ");
+        verb = firstLine[0];
+        uri = firstLine[1];
+        httpVersion = firstLine[2];
+
+        int index = 1;
+        headers = new HashMap<>();
+        while (arr[index].contains(": ")) { // or while != " " ?
+            String[] headersArr = arr[index].split(": ");
+            headers.put(headersArr[0], headersArr[1]);
+            index++;
+        }
+
+
+        if (headers.containsKey("Content-Length")) {
+            body = arr[index + 1];
+        }
 
     }
-    //accessors
+
+    // accessors
+
+    public static void main (String args[]) {
+        String test = "GET /docs/index.html HTTP/1.1\n" +
+                "Host: www.nowhere123.com\n" +
+                "Content-Length: 11\n" +
+                "    \n" +
+                "Hello World";
+
+        Request myReq = new Request(Stream.of(test));
+
+        System.out.println("Headers: " + myReq.headers + "\nBody: " + myReq.body);
+
+    }
 }

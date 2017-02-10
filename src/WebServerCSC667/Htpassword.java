@@ -5,7 +5,7 @@ import java.util.Dictionary;
 /**
  * Created by Vivian on 2/3/17.
  */
-public class Htpassword extends ConfigurationReader{
+public class Htpassword {
 
     private Dictionary users;
 
