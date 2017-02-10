@@ -1,16 +1,12 @@
 package WebServerCSC667;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-/**
- * Created by rain2 on 2/3/2017.
- */
 public class Resource {
 
     private URI myURI;
@@ -72,7 +68,11 @@ public class Resource {
         return false;
     }
 
+    // If a path is protected, authentification process should occur
     public boolean isProtected(){
+        if (myPath.contains("protected")) {
+            return true;
+        }
         return false;
     }
 
@@ -88,7 +88,4 @@ public class Resource {
         }
         System.out.println(decodeMe);
     }
-
-
-
 }
