@@ -3,7 +3,7 @@ package WebServerCSC667;
 /**
  * Created by Vivian on 2/3/17.
  */
-public class Htaccess extends ConfigurationReader {
+public class Htaccess  {
 
     private Htpassword userFile;
     private String authType;

@@ -12,7 +12,7 @@ public class Logger {
 
     }
 
-    public write (Request request, Response response){
+    //public write (Request request, Response response){
 
-    }
+    //}
 }

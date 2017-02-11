@@ -6,7 +6,7 @@ import java.io.OutputStream;
  * Created by rain2 on 2/3/2017.
  */
 public class Response {
-    int code;
+    int code; // status code
     String reasonPhrase;
     Resource resource;
 
