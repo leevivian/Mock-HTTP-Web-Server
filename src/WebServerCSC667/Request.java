@@ -15,11 +15,11 @@ public class Request {
 
     private Object myStr;
 
-    public Request (String test) throws BadRequest{
+    public Request (String test){
         myStr = test;
         parse();
     }
-    public Request (Stream client) throws BadRequest{
+    public Request (Stream client) {
         String thisLine;
         String streamToString = client.iterator().next().toString();
         StringReader readString = new StringReader(streamToString);
@@ -34,7 +34,7 @@ public class Request {
         }
         parse();
     }
-    public void parse() throws BadRequest{
+    public void parse() {
         boolean contentLength = false;
         String[] arr = (myStr.toString()).split("[\n\r]+");
 
@@ -46,7 +46,7 @@ public class Request {
 
         int index = 1;
         headers = new HashMap();
-        while (arr[index].contains(": ")) { // or while != " " ?
+        while (arr[index].contains(": ") && index < arr.length - 1) { // or while != " " ?
             String[] headersArr = arr[index].split(": ");
             headers.put(headersArr[0], headersArr[1]);
             index++;
@@ -59,18 +59,32 @@ public class Request {
 
     }
 
+    public void printMe() {
+        // For testing purposes
+        System.out.println("-----THIS IS A TEST from the Request class-----");
+        System.out.println("Verb:" + verb);
+        System.out.println("URI:" + uri);
+        System.out.println("Header:" + headers);
+        System.out.println("Body:" + body);
+        System.out.println("-----End of test!-----");
+    }
+
     // accessors
 
-    public static void main (String args[]) throws BadRequest{
-        String test = "GET /docs/index.html HTTP/1.1\n" +
-                "Host: www.nowhere123.com\n" +
-                "Content-Length: 11\n" +
-                "    \n" +
-                "Hello World";
+    // for testing
+    public static void main (String args[]){
+        String test = "POST / HTTP/1.1\n" +
+                "cache-control: no-cache\n" +
+                "Postman-Token: 69936131-e3f1-4e70-9a2f-dbb51d33c814\n" +
+                "User-Agent: PostmanRuntime/3.0.9\n" +
+                "Accept: */*\n" +
+                "Host: localhost:8096\n" +
+                "accept-encoding: gzip, deflate\n" +
+                "content-length: 0\n" +
+                "Connection: keep-alive";
 
         Request myReq = new Request(Stream.of(test));
 
-        System.out.println("Headers: " + myReq.headers + "\nBody: " + myReq.body);
-
     }
+
 }
