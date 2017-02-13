@@ -19,12 +19,18 @@ public class Request {
         myStr = test;
         parse();
     }
+
     public Request (Stream client) {
         String thisLine;
-        String streamToString = client.iterator().next().toString();
+        String streamToString = "";
+        Iterator it =  client.iterator();
+
+        while (it.hasNext()) {
+            streamToString += it.next().toString();
+
+        }
         StringReader readString = new StringReader(streamToString);
         BufferedReader readText = new BufferedReader(readString);
-
         try {
             while ((thisLine = readText.readLine()) != null) {
                 myStr = myStr + thisLine + "\n";
@@ -34,15 +40,21 @@ public class Request {
         }
         parse();
     }
+
     public void parse() {
         boolean contentLength = false;
         String[] arr = (myStr.toString()).split("[\n\r]+");
 
         // HTTP_METHOD IDENTIFIER HTTP_VERSION
-        String[] firstLine = arr[0].split(" ");
+        String[] firstLine = arr[0].split("\\s+");
         verb = firstLine[0];
         uri = firstLine[1];
         httpVersion = firstLine[2];
+
+        // test
+        for (int j = 0; j < arr.length; j++) {
+            System.out.println(arr[j]);
+        }
 
         int index = 1;
         headers = new HashMap();
@@ -58,9 +70,27 @@ public class Request {
             body = arr[index];
         }
 
-        printMe();
-
     }
+
+    public String getVerb() {
+        return verb;
+    }
+
+    public String getURI(){
+        return uri;
+    }
+
+   public String getHttpVersion() {
+        return httpVersion;
+   }
+
+   public HashMap getHeaders() {
+        return headers;
+   }
+
+   public String getBody() {
+        return body;
+   }
 
     public void printMe() {
         // For testing purposes
@@ -76,7 +106,9 @@ public class Request {
 
     // for testing
     public static void main (String args[]){
-        String test = "POST / HTTP/1.1\n" +
+
+        Stream.Builder b = Stream.builder();
+        b.accept("POST / HTTP/1.1\n" +
                 "cache-control: no-cache\n" +
                 "Postman-Token: 69936131-e3f1-4e70-9a2f-dbb51d33c814\n" +
                 "User-Agent: PostmanRuntime/3.0.9\n" +
@@ -84,9 +116,12 @@ public class Request {
                 "Host: localhost:8096\n" +
                 "accept-encoding: gzip, deflate\n" +
                 "content-length: 0\n" +
-                "Connection: keep-alive";
+                "Connection: keep-alive");
 
-        Request myReq = new Request(Stream.of(test));
+        Stream<String> s = b.build();
+
+        Request myReq = new Request(s);
+        myReq.printMe();
 
     }
 
