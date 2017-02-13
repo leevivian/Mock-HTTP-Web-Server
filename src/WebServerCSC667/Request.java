@@ -21,23 +21,13 @@ public class Request {
     }
 
     public Request (Stream client) {
-        String thisLine;
-        String streamToString = "";
         Iterator it =  client.iterator();
 
         while (it.hasNext()) {
-            streamToString += it.next().toString();
+            myStr += it.next().toString();
 
         }
-        StringReader readString = new StringReader(streamToString);
-        BufferedReader readText = new BufferedReader(readString);
-        try {
-            while ((thisLine = readText.readLine()) != null) {
-                myStr = myStr + thisLine + "\n";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         parse();
     }
 

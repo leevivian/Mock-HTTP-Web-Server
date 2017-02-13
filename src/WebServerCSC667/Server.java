@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.Dictionary;
 import java.lang.Exception;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
 
@@ -22,7 +23,6 @@ public class Server {
 
     // for testing
     Request myReq;
-    Boolean flag = false;
 
     public void start() throws IOException{
         configuration = new HttpdConf("httpd.conf");
@@ -38,20 +38,22 @@ public class Server {
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             Stream.Builder<String> b = Stream.builder();
 
+            String completeLine = "";
+
             while((currentLine = br.readLine()) != null) {
                 System.out.println(currentLine);
 
                 b.add(currentLine + "\n");
+                completeLine += currentLine;
             }
 
-            if (flag) {
+            if (!completeLine.isEmpty()) {
                 Stream<String> s = b.build();
                 myReq = new Request(s);
                 myReq.printMe();
-
             }
 
-            flag = true;
+
             connection.close();
         }
     }
