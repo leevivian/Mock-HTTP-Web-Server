@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.Dictionary;
 import java.lang.Exception;
+import java.util.stream.Stream;
 
 
 public class Server {
@@ -21,68 +22,37 @@ public class Server {
 
     // for testing
     Request myReq;
+    Boolean flag = false;
 
     public void start() throws IOException{
         configuration = new HttpdConf("httpd.conf");
         mimeTypes = new MimeTypes( "mime.types");
 
-        socket = new ServerSocket(configuration.getPort());
+        socket = new ServerSocket(3100);
 
-        String completeLine = "";
+
 
         while (true) {
             connection = socket.accept();
             String currentLine;
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            Stream.Builder<String> b = Stream.builder();
 
             while((currentLine = br.readLine()) != null) {
                 System.out.println(currentLine);
 
-                // for Testing Request's Constructor with String
-                if (currentLine != null) {
-                    completeLine += currentLine + "\n";
-                }
+                b.add(currentLine + "\n");
             }
 
-            if (!completeLine.isEmpty()) {
-                try {
-                    myReq = new Request(completeLine);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                completeLine = "";
-            }
-
-            //getRequest(connection);
-            connection.close();
-        }
-    }
-
-    private void getRequest(Socket mySocket) throws IOException {
-        System.out.println("This is an HTTP Request from Postman");
-
-        String currentLine;
-        String completeLine = null;
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-
-        while((currentLine = br.readLine()) != null) {
-            System.out.println(currentLine);
-
-            // for Testing Request's Constructor with String
-            completeLine += currentLine + "\n";
-        }
-
-
-        if (completeLine != null) {
-            try {
-                myReq = new Request(completeLine);
+            if (flag) {
+                Stream<String> s = b.build();
+                myReq = new Request(s);
                 myReq.printMe();
 
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
+            flag = true;
+            connection.close();
         }
     }
 
