@@ -53,9 +53,12 @@ public class Request {
         }
 
 
-        if (headers.containsKey("Content-Length")) {
-            body = arr[index + 1];
+        // What if content-length is 0?
+        if (headers.containsKey("Content-Length") || headers.containsKey("content-length")) {
+            body = arr[index];
         }
+
+        printMe();
 
     }
 

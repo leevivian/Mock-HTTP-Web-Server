@@ -28,9 +28,33 @@ public class Server {
 
         socket = new ServerSocket(configuration.getPort());
 
+        String completeLine = "";
+
         while (true) {
             connection = socket.accept();
-            getRequest(connection);
+            String currentLine;
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            while((currentLine = br.readLine()) != null) {
+                System.out.println(currentLine);
+
+                // for Testing Request's Constructor with String
+                if (currentLine != null) {
+                    completeLine += currentLine + "\n";
+                }
+            }
+
+            if (!completeLine.isEmpty()) {
+                try {
+                    myReq = new Request(completeLine);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                completeLine = "";
+            }
+
+            //getRequest(connection);
             connection.close();
         }
     }
