@@ -6,8 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class Resource {
 
@@ -20,7 +18,8 @@ public class Resource {
 
     private File file;
     private String myPath;
-    private boolean ModifiedURI = false;
+    private boolean modifiedURI = false;
+    private boolean modifiedScriptAliasURI = false;
 
     public int getResponseCode() {
         return responseCode;
@@ -36,27 +35,9 @@ public class Resource {
         myConf = config;
         myURIString = uri;
         String[] temp = uri.split("/");
-        System.out.println(temp[0]);
-        System.out.println(temp[1]);
 
-        //TODO: remove ghetto parse "/"
-        //Check if uri has a scriptAlias
-        for (int i = 0; i < temp.length; i++) {
-            if (config.getScriptAliases().containsKey("/"+temp[i]+"/")) {
-                System.out.println("KEY TESTS");
-                myPath = config.getScriptAliases().get("/"+temp[i]+"/");
-                System.out.println("CONFIG TESTS: "+myPath);
-                ModifiedURI = true;
-                i++;
-
-                //Reapprend the rest of the URI
-                while (i < temp.length){
-                    myPath = myPath + temp[i];
-                    i++;
-                }
-                break;
-            }
-        }
+        checkContainsScriptAliasKey(temp, config);
+        checkContainsAliasKey(temp, config);
         System.out.println("OUT OF FOR CONFIG TESTS: "+myPath);
         System.out.println("uri: " +  uri);
 /*
@@ -68,29 +49,22 @@ public class Resource {
 */
         // ******* RESOLVE PATH *******
         docuRoot = config.getDocumentRoot();
-        if (ModifiedURI == false) {
+        if (modifiedURI == false) {
             myPath = docuRoot + myURIString;
-
         }
         System.out.println("docuRoot: " + docuRoot);
         System.out.println("myURIString: " + myURIString);
         System.out.println("myPath: " + myPath);
 
+        //TODO: File checks do not work because they check the jrob server
+        //but the file Check works
         // If the path is not a file, append DirIndex
-        Path file = new File(myPath).toPath();
-        //boolean isFile = Files.isRegularFile(file);
-        if (Files.isRegularFile(file)){
-            System.out.println("*****NOT A FILE***");
+
+        if (new File(myPath).isFile() == true){
+            //System.out.println("ITS A FILE");
             myPath = "public_html/index.html";
         }
 
-        /*
-        file = new File(myPath);
-        if (!file.isFile()) {
-            System.out.println("*****NOT A FILE***");
-            myPath = "public_html/index.html";
-        }
-*/
         // Get absolute path?
         absolutePath = myPath;
         System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
@@ -109,23 +83,63 @@ public class Resource {
     }
 
     public boolean isScript(){
-
-        if (myConf.getScriptAliases() != null) {
+        if ((modifiedScriptAliasURI == true) && myConf.getScriptAliases() != null) {
             return true;
         }
         return false;
     }
 
-    //TODO:
+
     // If a path is protected, authentification process should occur
     public boolean isProtected(){
-        if (myPath.contains("protected")) {
+        if (new File(myPath+ "/.htaccess").exists() == true) {
+            //System.out.println("ITS PROTECTED");
             return true;
         }
         return false;
     }
 
+    //Check if uri has a scriptAlias
+    //Starts @ the end od temp[] index
+    //TODO: Remove ghetto parse "/"
+    public void checkContainsScriptAliasKey(String[] temp, HttpdConf config) {
+        for (int i = temp.length-1; i > 0; i--) {
 
+            if (config.getScriptAliases().containsKey("/" + temp[i] + "/")) {
+                System.out.println("KEY TESTS");
+                myPath = config.getScriptAliases().get("/" + temp[i] + "/");
+                System.out.println("CONFIG TESTS: " + myPath);
+                this.modifiedScriptAliasURI = true;
+                this.modifiedURI = true;
+
+                i++;
+                //Reapprend the rest of the URI
+                while (i < temp.length) {
+                    myPath = myPath + temp[i];
+                    i++;
+                }
+                break;
+            }
+        }
+    }
+    public void checkContainsAliasKey(String[] temp, HttpdConf config){
+        for (int i = temp.length-1; i > 0; i--) {
+            if (config.getAliases().containsKey("/"+temp[i]+"/")) {
+                System.out.println("KEY TESTS");
+                myPath = config.getAliases().get("/"+temp[i]+"/");
+                System.out.println("CONFIG TESTS: "+myPath);
+                this.modifiedURI = true;
+
+                i++;
+                //Reapprend the rest of the URI
+                while (i < temp.length){
+                    myPath = myPath + temp[i];
+                    i++;
+                }
+                break;
+            }
+        }
+    }
     @Override
     public String toString() {
         return "Resource{" +
@@ -143,7 +157,7 @@ public class Resource {
         HttpdConf myHttpdConf = new HttpdConf("httpd.conf");
 
         // test by using script alias URI
-        Resource myRes = new Resource("public_html/images/sushi.jpg", myHttpdConf);
+        Resource myRes = new Resource("public_html/ab1/ab2/index.html", myHttpdConf);
         try {
             decodeMe = URLDecoder.decode(myRes.myURI.toString(), "UTF8");
         } catch (UnsupportedEncodingException e) {
