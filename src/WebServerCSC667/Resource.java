@@ -83,7 +83,7 @@ public class Resource {
     }
 
     public boolean isScript(){
-        if ((modifiedScriptAliasURI == true) && myConf.getScriptAliases() != null) {
+        if ((modifiedScriptAliasURI == true) && (myConf.getScriptAliases() != null)) {
             return true;
         }
         return false;
