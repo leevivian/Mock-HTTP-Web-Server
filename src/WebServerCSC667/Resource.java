@@ -14,9 +14,17 @@ public class Resource {
     private String alias;
     private String myURIString;
     private String docuRoot;
+    private String absolutePath;
 
     private File file;
     private String myPath;
+    private boolean ModifiedURI = false;
+
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    private int responseCode;
 
     // For test
     static String decodeMe;
@@ -25,28 +33,57 @@ public class Resource {
 
         myConf = config;
         myURIString = uri;
+        String[] temp = uri.split("/");
+        System.out.println(temp[0]);
+        System.out.println(temp[1]);
 
-        // check if there are aliases
-        if ((alias = config.getAliases().get(uri)) != null) {
-                myURIString = alias;
+        //TODO: remove ghetto parse "/"
+        //Check if uri has a scriptAlias
+        for (int i = 0; i < temp.length; i++) {
+            if (config.getScriptAliases().containsKey("/"+temp[i]+"/")) {
+                System.out.println("KEY TESTS");
+                myPath = config.getScriptAliases().get("/"+temp[i]+"/");
+                System.out.println("CONFIG TESTS: "+myPath);
+                ModifiedURI = true;
+                i++;
+
+                //Reapprend the rest of the URI
+                while (i < temp.length){
+                    myPath = myPath + "/"+ temp[i];
+                    i++;
+                }
+                break;
+            }
         }
-         else if (isScript()) {   // also check if ScriptAlias exists
-
-            myURIString = config.getScriptAliases().get(uri);
+        System.out.println("OUT OF FOR CONFIG TESTS: "+myPath);
+        System.out.println("uri: " +  uri);
+/*
+        if (0 == 0) {
+            responseCode = 200;
+            new Response(this);
+            return;
         }
-
+*/
         // ******* RESOLVE PATH *******
         docuRoot = config.getDocumentRoot();
-        myPath = docuRoot + myURIString;
+        if (ModifiedURI == false) {
+            myPath = docuRoot + myURIString;
+
+        }
+        System.out.println("docuRoot: " + docuRoot);
+        System.out.println("myURIString: " + myURIString);
+        System.out.println("myPath: " + myPath);
 
         // If the path is not a file, append DirIndex
         file = new File(myPath);
         if (!file.isFile()) {
-            myPath += "index.html";
+            System.out.println("*****NOT A FILE***");
+            myPath = "public_html/index.html";
         }
 
         // Get absolute path?
-        myPath = absolutePath();
+        absolutePath = myPath;
+        System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
 
         try {
             // needs encoding otherwise - URISyntaxException: Illegal character in path
@@ -54,10 +91,11 @@ public class Resource {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
     }
 
-    public String absolutePath(){
-        return file.getAbsolutePath();
+    public String getAbsolutePath(){
+        return absolutePath;
     }
 
     public boolean isScript(){
@@ -76,16 +114,31 @@ public class Resource {
         return false;
     }
 
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "\nmyURI=" + myURI +
+                ", \nmyConf=" + myConf +
+                ", \nalias='" + alias + '\'' +
+                ", \nmyURIString='" + myURIString + '\'' +
+                ", \ndocuRoot='" + docuRoot + '\'' +
+                ", \nfile=" + file +
+                ", myPath='" + myPath + '\'' +
+                '}';
+    }
+
     public static void main (String args[]) throws URISyntaxException{
         HttpdConf myHttpdConf = new HttpdConf("httpd.conf");
 
         // test by using script alias URI
-        Resource myRes = new Resource("/cgi-bin/", myHttpdConf);
+        Resource myRes = new Resource("public_html/cgi-bin/perl_env", myHttpdConf);
         try {
             decodeMe = URLDecoder.decode(myRes.myURI.toString(), "UTF8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        System.out.println(decodeMe);
+        //System.out.println(decodeMe);
+        System.out.println(myRes.toString());
     }
 }
