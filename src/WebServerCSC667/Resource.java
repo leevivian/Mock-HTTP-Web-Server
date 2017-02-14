@@ -6,6 +6,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Resource {
 
@@ -49,7 +51,7 @@ public class Resource {
 
                 //Reapprend the rest of the URI
                 while (i < temp.length){
-                    myPath = myPath + "/"+ temp[i];
+                    myPath = myPath + temp[i];
                     i++;
                 }
                 break;
@@ -75,12 +77,20 @@ public class Resource {
         System.out.println("myPath: " + myPath);
 
         // If the path is not a file, append DirIndex
+        Path file = new File(myPath).toPath();
+        //boolean isFile = Files.isRegularFile(file);
+        if (Files.isRegularFile(file)){
+            System.out.println("*****NOT A FILE***");
+            myPath = "public_html/index.html";
+        }
+
+        /*
         file = new File(myPath);
         if (!file.isFile()) {
             System.out.println("*****NOT A FILE***");
             myPath = "public_html/index.html";
         }
-
+*/
         // Get absolute path?
         absolutePath = myPath;
         System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
@@ -106,6 +116,7 @@ public class Resource {
         return false;
     }
 
+    //TODO:
     // If a path is protected, authentification process should occur
     public boolean isProtected(){
         if (myPath.contains("protected")) {
@@ -132,7 +143,7 @@ public class Resource {
         HttpdConf myHttpdConf = new HttpdConf("httpd.conf");
 
         // test by using script alias URI
-        Resource myRes = new Resource("public_html/cgi-bin/perl_env", myHttpdConf);
+        Resource myRes = new Resource("public_html/images/sushi.jpg", myHttpdConf);
         try {
             decodeMe = URLDecoder.decode(myRes.myURI.toString(), "UTF8");
         } catch (UnsupportedEncodingException e) {
