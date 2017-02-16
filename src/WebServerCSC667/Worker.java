@@ -16,6 +16,6 @@ public class Worker extends Thread{
     // Return type?
     public void run (){
         Worker w = new Worker (client, config, mimes);
-        new Thread(w).start();
+        w.start();
     }
 }
