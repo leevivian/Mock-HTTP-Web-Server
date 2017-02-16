@@ -3,6 +3,7 @@ package WebServerCSC667;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 /**
  * Created by rain2 on 2/3/2017.
@@ -23,65 +24,77 @@ public class Response {
     int code; // status code
     String reasonPhrase = "Response test";
     Resource resource;
-    private String httpVersion = "";
+    private String httpVersion = "1.1";
+    String responseString = "";
 
-
+/*
+HTTP/1.1 404 Not Found
+Date: Sun, 18 Oct 2012 10:36:20 GMT
+Server: Apache/2.2.14 (Win32)
+Content-Length: 230
+Connection: Closed
+Content-Type: text/html; charset=iso-8859-1
+ */
+    //for testing, not real Response
     public Response(int code){
         this.code = code;
-        getReasonPhrase(code);
-        System.out.println(reasonPhrase);
-
+        reasonPhrase = getReasonPhrase(code);
+        responseString = "HTTP/" + httpVersion + " " +code + " " + reasonPhrase +
+                "\nDate: " + new Date() +
+                "\nServer: " +
+                "\nContent-Length: " +
+                "\nConnection: " +
+                "\nContent-Type: ";
+        System.out.println(responseString);
     }
-    public Response (Resource resource){
+
+    public Response (Resource resource, int code){
         this.resource = resource;
-        code = resource.getResponseCode();
-        getReasonPhrase(code);
-        System.out.println(reasonPhrase);
+        this.code = resource.getResponseCode();
+        //
+        reasonPhrase = getReasonPhrase(code);
+        responseString = "HTTP/" + httpVersion + " " +code + " " + reasonPhrase +
+                "\nDate: " + new Date() +
+                "\nServer: " +
+                "\nContent-Length: " +
+                "\nConnection: " +
+                "\nContent-Type: ";
 
     }
 
-    public void getReasonPhrase(int code){
+    public String getReasonPhrase(int code){
         switch(code) {
             case 200:
-                reasonPhrase = "OK";
-                break;
+                return "OK";
             case 201:
-                reasonPhrase = "Created";
-                break;
+                return "Created";
             case 304:
-                reasonPhrase = "No Content";
-                break;
+                return "No Content";
             case 400:
-                reasonPhrase = "Bad Request";
-                break;
+                return "Bad Request";
             case 401:
-                reasonPhrase = "Unauthorized";
-                break;
+                return "Unauthorized";
             case 403:
-                reasonPhrase = "Forbidden";
-                break;
+                return "Forbidden";
             case 404:
-                reasonPhrase = "Not Found";
-                break;
+                return "Not Found";
             case 500:
-                reasonPhrase = "Internal Server Error";
-                break;
+                return "Internal Server Error";
             //TODO: Default??
             default:
-                reasonPhrase = "ERROR: CODE NOT VALID";
+                return "ERROR: CODE NOT VALID";
         }
     }
     //TODO: make send non void
     public void send(OutputStream out){
         try {
-            out.write(reasonPhrase.getBytes(Charset.forName("UTF-8")));
+            out.write(responseString.getBytes(Charset.forName("UTF-8")));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void main (String[] args){
-        Response test = new Response(400);
-        System.out.println(test);
+        Response test = new Response(200);
     }
 }
