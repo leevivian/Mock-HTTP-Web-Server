@@ -13,7 +13,7 @@ public class Request {
     private String httpVersion;
     private HashMap headers;
 
-    private Object myStr;
+    private String myStr = "";
 
     public Request (String test){
         myStr = test;
@@ -25,7 +25,7 @@ public class Request {
 
         while (it.hasNext()) {
             myStr += it.next().toString();
-
+            System.out.println("myStr: " + myStr);
         }
 
         parse();
