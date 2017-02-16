@@ -28,7 +28,7 @@ public class Server {
         configuration = new HttpdConf("httpd.conf");
         mimeTypes = new MimeTypes( "mime.types");
 
-        socket = new ServerSocket(3100);
+        socket = new ServerSocket(configuration.getPort());
 
 
 
@@ -48,11 +48,16 @@ public class Server {
             }
 
             if (!completeLine.isEmpty()) {
+                System.out.println("builder: " + b);
                 Stream<String> s = b.build();
+                System.out.println("Stream: " + s);
                 myReq = new Request(s);
                 myReq.printMe();
             }
 
+
+            // Unsure about this location of this...
+            Worker newWorker = new Worker(connection, configuration, mimeTypes);
 
             connection.close();
         }
