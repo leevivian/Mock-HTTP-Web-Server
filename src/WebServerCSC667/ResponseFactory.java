@@ -8,7 +8,7 @@ import java.io.File;
 public class ResponseFactory {
 
 
-    Response getResponse(Request request, Resource resource) {
+    public Response getResponse(Request request, Resource resource) {
         //TODO: Access checks
 
         if (request.getVerb() != "PUT") {

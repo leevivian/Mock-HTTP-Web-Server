@@ -34,27 +34,6 @@ public class Server {
 
         while (true) {
             connection = socket.accept();
-            String currentLine;
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            Stream.Builder<String> b = Stream.builder();
-
-            String completeLine = "";
-
-            while((currentLine = br.readLine()) != null) {
-                System.out.println(currentLine);
-
-                b.add(currentLine + "\n");
-                completeLine += currentLine;
-            }
-
-            if (!completeLine.isEmpty()) {
-                System.out.println("builder: " + b);
-                Stream<String> s = b.build();
-                System.out.println("Stream: " + s);
-                myReq = new Request(s);
-                myReq.printMe();
-            }
-
 
             // Unsure about this location of this...
             Worker newWorker = new Worker(connection, configuration, mimeTypes);
