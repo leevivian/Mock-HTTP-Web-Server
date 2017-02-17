@@ -46,22 +46,29 @@ public class Worker extends Thread{
 
         // Create request
         if (!completeLine.isEmpty()) {
-            System.out.println("builder: " + b);
             s = b.build();
-            System.out.println("Stream: " + s);
             myReq = new Request(s);
             myReq.printMe();
+
+            // Create resource
+            try {
+                res = new Resource(myReq.getURI(), config);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            // Send response
+            ResponseFactory rf = new ResponseFactory();
+            Response myResponse = rf.getResponse(myReq, res);
+
+            try {
+                myResponse.send(client.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
-        // Create resource
-        try {
-            res = new Resource(myReq.getURI(), config);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
 
-        // Send response
-        ResponseFactory rf = new ResponseFactory();
-        rf.getResponse(myReq, res);
     }
 }

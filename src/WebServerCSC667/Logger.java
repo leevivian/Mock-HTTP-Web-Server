@@ -3,6 +3,8 @@ package WebServerCSC667;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,7 +21,7 @@ public class Logger {
     }
 
     // Return type?
-    public void write (Request request){
+    public void write (Request request, Response response){
 
         // Common log format from https://httpd.apache.org/docs/1.3/logs.html
         try {
@@ -66,7 +68,14 @@ public class Logger {
                                     "content-length: 0\n" +
                                     "Connection: keep-alive");
 
-        log.write(myReq);
+        HttpdConf config = new HttpdConf("httpd.conf");
+        try {
+            Resource res = new Resource(myReq.getURI(), config);
+            Response response = new Response(res, 200);
+            log.write(myReq, response);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
     }
 
