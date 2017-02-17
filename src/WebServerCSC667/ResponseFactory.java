@@ -1,8 +1,10 @@
 package WebServerCSC667;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Created by rain2 on 2/3/2017.
@@ -29,11 +31,25 @@ public class ResponseFactory {
                 switch(request.getVerb()) {
                     //TODO code for each switch case
                     case "PUT":
-
-                        return new Response(resource, 201);
+                        //if file already exists
+                        if (new File(resource.getAbsolutePath()).isFile() == false){
+                            return new Response(resource, 404);
+                        }
+                        //do put
+                        else {
+                            byte data[] = request.getBody().getBytes();
+                            Path filePUT = Paths.get(resource.getAbsolutePath());
+                            try {
+                                Files.write(filePUT, data);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            //Files.write(file, data, StandardOpenOption.APPEND);
+                            return new Response(resource, 201);
+                        }
                     case "DELETE":
                         File file = new File(resource.getAbsolutePath());
-                        if (file.exists() == true){
+                        if (file.isFile() == true){
                         file.delete();
                         return new Response(resource,204);
                         }
