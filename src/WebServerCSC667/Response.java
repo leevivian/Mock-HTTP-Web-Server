@@ -2,6 +2,7 @@ package WebServerCSC667;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Date;
 
@@ -76,12 +77,16 @@ Content-Type: text/html; charset=iso-8859-1
     //TODO: make send non void
     public void send(OutputStream out){
 
+        //out.write(responseString.getBytes(Charset.forName("UTF-8")));
+        //PrintWriter pw = new PrintWriter(System.out);
+        //pw.write(responseString);
+        byte[] bytes = responseString.getBytes();
+        //new PrintWriter( out, true );
         try {
-            out.write(responseString.getBytes(Charset.forName("UTF-8")));
+            out.write( bytes );
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }
