@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.stream.Stream;
 
 /**
  * Created by rain2 on 2/3/2017.
@@ -44,11 +45,11 @@ Content-Type: text/html; charset=iso-8859-1
         reasonPhrase = getReasonPhrase(code);
         responseString = "HTTP/" + httpVersion + " " +code + " " + reasonPhrase +
                 "\nDate: " + new Date() +
-                "\nServer: " + //name?
+                "\nServer: " + "CSC667 WebServer" + //name?
                 "\nContent-Length: " + //size of file
                 "\nConnection: " + //keep-alive?
                 "\nContent-Type: ";  //value of mimetype key
-        System.out.println(responseString);
+        //System.out.println(responseString);
     }
 
     public String getReasonPhrase(int code){
@@ -80,13 +81,15 @@ Content-Type: text/html; charset=iso-8859-1
         //out.write(responseString.getBytes(Charset.forName("UTF-8")));
         //PrintWriter pw = new PrintWriter(System.out);
         //pw.write(responseString);
-        byte[] bytes = responseString.getBytes();
-        //new PrintWriter( out, true );
-        try {
-            out.write( bytes );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //byte[] bytes = responseString.getBytes();
+        PrintWriter test = new PrintWriter( out, true );
+        //System.out.println("bytes:" + bytes.length);
+
+
+
+        test.println("jlkjlkjljkjlk");
+        System.out.println("SEND TEST*********************");
+
     }
 
 }

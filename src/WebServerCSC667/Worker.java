@@ -52,7 +52,7 @@ public class Worker extends Thread{
 
             // Create resource
             try {
-                res = new Resource(myReq.getURI(), config);
+                res = new Resource(myReq.getURI(), config, mimes);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }

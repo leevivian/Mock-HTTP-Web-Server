@@ -12,6 +12,7 @@ public class Resource {
 
     private URI myURI;
     private HttpdConf myConf;
+    private MimeTypes myMimeType;
     private String alias;
     private String myURIString;
     private String docuRoot;
@@ -31,10 +32,11 @@ public class Resource {
     // For test
     static String decodeMe;
 
-    public Resource (String uri, HttpdConf config) throws URISyntaxException{
+    public Resource (String uri, HttpdConf config, MimeTypes mimeTypes) throws URISyntaxException{
 
         myConf = config;
         myURIString = uri;
+        myMimeType = mimeTypes;
         String[] temp = uri.split("/");
 
         checkContainsScriptAliasKey(temp, myConf);
@@ -155,9 +157,10 @@ public class Resource {
 
     public static void main (String args[]) throws URISyntaxException{
         HttpdConf myHttpdConf = new HttpdConf("httpd.conf");
+        MimeTypes myMime = new MimeTypes( "mime.types");
 
         // test by using script alias URI
-        Resource myRes = new Resource("public_html/cgi-bin/perl_env", myHttpdConf);
+        Resource myRes = new Resource("public_html/cgi-bin/perl_env", myHttpdConf, myMime);
         try {
             decodeMe = URLDecoder.decode(myRes.myURI.toString(), "UTF8");
         } catch (UnsupportedEncodingException e) {
@@ -182,6 +185,7 @@ public class Resource {
         Request myReq = new Request(s);
 
         Response test = ResponseFactory.getResponse(myReq, myRes);
+        System.out.println(myReq.getHeaders());
     }
 
 }
