@@ -69,8 +69,10 @@ public class Logger {
                                     "Connection: keep-alive");
 
         HttpdConf config = new HttpdConf("httpd.conf");
+        MimeTypes myMime = new MimeTypes( "mime.types");
+
         try {
-            Resource res = new Resource(myReq.getURI(), config);
+            Resource res = new Resource(myReq.getURI(), config, myMime);
             Response response = new Response(res, 200);
             log.write(myReq, response);
         } catch (URISyntaxException e) {

@@ -1,6 +1,8 @@
 package WebServerCSC667;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Created by rain2 on 2/3/2017.
@@ -23,12 +25,22 @@ public class ResponseFactory {
                 return new Response(resource,200);
             }
             else if (resource.isScript() == false) {
+
                 switch(request.getVerb()) {
                     //TODO code for each switch case
                     case "PUT":
+
                         return new Response(resource, 201);
                     case "DELETE":
+                        File file = new File(resource.getAbsolutePath());
+                        if (file.exists() == true){
+                        file.delete();
                         return new Response(resource,204);
+                        }
+                        else {
+                            System.out.println("File Doesn't exist");
+                            return  new Response(resource, 400);
+                        }
                     case "GET":
                         //TODO: returns for POST & HEAD in get
                         return new Response(resource, 200);
