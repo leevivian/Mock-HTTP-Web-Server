@@ -14,6 +14,7 @@ public class ConfigurationReader {
     private File file;
     private String[] parsedFile;
     private int parsedFileIndex = 0;
+    String fileContents;
 
     public ConfigurationReader() {
     }
@@ -49,7 +50,7 @@ public class ConfigurationReader {
 
     public void load() {
         try {
-            String fileContents = new String(Files.readAllBytes(Paths.get("conf/"+file)));
+            fileContents = new String(Files.readAllBytes(Paths.get("conf/"+file)));
             parse(fileContents);
         } catch (IOException e) {
             System.out.println("failed to read file");
@@ -67,7 +68,6 @@ public class ConfigurationReader {
         System.out.println(test);
         for (int i = 0; i <test.parsedFile.length; i++){
             System.out.println(test.parsedFile[i]);
-
         }
         //System.out.println(test.nextLine());
     }

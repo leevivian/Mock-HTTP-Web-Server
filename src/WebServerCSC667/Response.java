@@ -35,31 +35,19 @@ Content-Length: 230
 Connection: Closed
 Content-Type: text/html; charset=iso-8859-1
  */
-    //for testing, not real Response
-    public Response(int code){
-        this.code = code;
-        reasonPhrase = getReasonPhrase(code);
-        responseString = "HTTP/" + httpVersion + " " +code + " " + reasonPhrase +
-                "\nDate: " + new Date() +
-                "\nServer: " +
-                "\nContent-Length: " +
-                "\nConnection: " +
-                "\nContent-Type: ";
-        System.out.println(responseString);
-    }
 
     public Response (Resource resource, int code){
         this.resource = resource;
-        this.code = resource.getResponseCode();
+        this.code = code;
         //
         reasonPhrase = getReasonPhrase(code);
         responseString = "HTTP/" + httpVersion + " " +code + " " + reasonPhrase +
                 "\nDate: " + new Date() +
-                "\nServer: " +
-                "\nContent-Length: " +
-                "\nConnection: " +
-                "\nContent-Type: ";
-
+                "\nServer: " + //name?
+                "\nContent-Length: " + //size of file
+                "\nConnection: " + //keep-alive?
+                "\nContent-Type: ";  //value of mimetype key
+        System.out.println(responseString);
     }
 
     public String getReasonPhrase(int code){
@@ -87,14 +75,13 @@ Content-Type: text/html; charset=iso-8859-1
     }
     //TODO: make send non void
     public void send(OutputStream out){
+
         try {
             out.write(responseString.getBytes(Charset.forName("UTF-8")));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    public static void main (String[] args){
-        Response test = new Response(200);
-    }
 }

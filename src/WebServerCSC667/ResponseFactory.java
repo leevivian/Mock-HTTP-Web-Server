@@ -8,35 +8,39 @@ import java.io.File;
 public class ResponseFactory {
 
 
-    public Response getResponse(Request request, Resource resource) {
+    public static Response getResponse(Request request, Resource resource) {
         //TODO: Access checks
-
+        if (resource.isProtected() == true){
+            //401 and 403 erros here
+        }
+        //start response
+        //else if (resource.isProtected() == false || (resource.isProtected() && //is VALID PW))
         if (request.getVerb() != "PUT") {
             //if file doesn't exist
             if (new File(resource.getAbsolutePath()).isFile() == true && (resource.isScript() == true)) {
                 //check if script alias
                 //TODO: add script execusion
-                return new Response(200);
+                return new Response(resource,200);
             }
             else if (resource.isScript() == false) {
                 switch(request.getVerb()) {
                     //TODO code for each switch case
                     case "PUT":
-                        return new Response(201);
+                        return new Response(resource, 201);
                     case "DELETE":
-                        return new Response(204);
+                        return new Response(resource,204);
                     case "GET":
                         //TODO: returns for POST & HEAD in get
-                        return new Response(200);
+                        return new Response(resource, 200);
                     default:
                 }
             }
             else {
-                return new Response(404);
+                return new Response(resource, 404);
             }
         }
         //TODO is it 400?
-        return new Response(400);
+        return new Response(resource,400);
     }
 
 }

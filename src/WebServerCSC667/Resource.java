@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.stream.Stream;
 
 public class Resource {
 
@@ -36,9 +37,9 @@ public class Resource {
         myURIString = uri;
         String[] temp = uri.split("/");
 
-        checkContainsScriptAliasKey(temp, config);
-        checkContainsAliasKey(temp, config);
-        System.out.println("OUT OF FOR CONFIG TESTS: "+myPath);
+        checkContainsScriptAliasKey(temp, myConf);
+        checkContainsAliasKey(temp, myConf);
+        System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
         System.out.println("uri: " +  uri);
 /*
         if (0 == 0) {
@@ -50,11 +51,11 @@ public class Resource {
         // ******* RESOLVE PATH *******
         docuRoot = config.getDocumentRoot();
         if (modifiedURI == false) {
-            myPath = docuRoot + myURIString;
+            this.myPath = docuRoot + myURIString;
         }
         System.out.println("docuRoot: " + docuRoot);
         System.out.println("myURIString: " + myURIString);
-        System.out.println("myPath: " + myPath);
+        System.out.println("myPath: " + this.myPath);
 
         //TODO: File checks do not work because they check the jrob server
         //but the file Check works
@@ -104,18 +105,17 @@ public class Resource {
     //TODO: Remove ghetto parse "/"
     public void checkContainsScriptAliasKey(String[] temp, HttpdConf config) {
         for (int i = temp.length-1; i > 0; i--) {
-
             if (config.getScriptAliases().containsKey("/" + temp[i] + "/")) {
                 System.out.println("KEY TESTS");
-                myPath = config.getScriptAliases().get("/" + temp[i] + "/");
-                System.out.println("CONFIG TESTS: " + myPath);
+                this.myPath = config.getScriptAliases().get("/" + temp[i] + "/");
+                System.out.println("CONFIG TESTS: " + this.myPath);
                 this.modifiedScriptAliasURI = true;
                 this.modifiedURI = true;
 
                 i++;
                 //Reapprend the rest of the URI
                 while (i < temp.length) {
-                    myPath = myPath + temp[i];
+                    this.myPath = this.myPath + temp[i];
                     i++;
                 }
                 break;
@@ -126,14 +126,14 @@ public class Resource {
         for (int i = temp.length-1; i > 0; i--) {
             if (config.getAliases().containsKey("/"+temp[i]+"/")) {
                 System.out.println("KEY TESTS");
-                myPath = config.getAliases().get("/"+temp[i]+"/");
-                System.out.println("CONFIG TESTS: "+myPath);
+                this.myPath = config.getAliases().get("/"+temp[i]+"/");
+                System.out.println("CONFIG TESTS: "+this.myPath);
                 this.modifiedURI = true;
 
                 i++;
                 //Reapprend the rest of the URI
                 while (i < temp.length){
-                    myPath = myPath + temp[i];
+                    this.myPath = this.myPath + temp[i];
                     i++;
                 }
                 break;
@@ -157,7 +157,7 @@ public class Resource {
         HttpdConf myHttpdConf = new HttpdConf("httpd.conf");
 
         // test by using script alias URI
-        Resource myRes = new Resource("public_html/ab1/ab2/index.html", myHttpdConf);
+        Resource myRes = new Resource("public_html/cgi-bin/perl_env", myHttpdConf);
         try {
             decodeMe = URLDecoder.decode(myRes.myURI.toString(), "UTF8");
         } catch (UnsupportedEncodingException e) {
@@ -165,5 +165,23 @@ public class Resource {
         }
         //System.out.println(decodeMe);
         System.out.println(myRes.toString());
+
+        Stream.Builder b = Stream.builder();
+        b.accept("POST / HTTP/1.1\n" +
+                "cache-control: no-cache\n" +
+                "Postman-Token: 69936131-e3f1-4e70-9a2f-dbb51d33c814\n" +
+                "User-Agent: PostmanRuntime/3.0.9\n" +
+                "Accept: */*\n" +
+                "Host: localhost:8096\n" +
+                "accept-encoding: gzip, deflate\n" +
+                "content-length: 0\n" +
+                "Connection: keep-alive");
+
+        Stream<String> s = b.build();
+
+        Request myReq = new Request(s);
+
+        Response test = ResponseFactory.getResponse(myReq, myRes);
     }
+
 }
