@@ -1,8 +1,9 @@
 package WebServerCSC667;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.InetAddress;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -47,7 +48,6 @@ Content-Type: text/html; charset=iso-8859-1
                 "\nContent-Length: " + //size of file
                 "\nConnection: " + //keep-alive?
                 "\nContent-Type: ";  //value of mimetype key
-        System.out.println(responseString);
     }
 
     public String getReasonPhrase(int code){
@@ -75,13 +75,20 @@ Content-Type: text/html; charset=iso-8859-1
     }
     //TODO: make send non void
     public void send(OutputStream out){
+        PrintStream ps = new PrintStream(out);
+        ps.println("HTTP/" + httpVersion + " " +code + " " + reasonPhrase);
+        ps.println("Date: " + new Date() + "");
+        ps.println("Server: " + "Hey there I'm the Server" + "");
+        ps.println("Content-Type: " + "Hey there I'm the content type" + "\n");
 
+        ps.flush();
+        ps.close();
         try {
-            out.write(responseString.getBytes(Charset.forName("UTF-8")));
+            out.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }

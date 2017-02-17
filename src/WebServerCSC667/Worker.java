@@ -23,6 +23,7 @@ public class Worker extends Thread{
     String completeLine = "";
 
     public Worker(Socket socket, HttpdConf config, MimeTypes mimes) throws IOException{
+        super();
         this.mimes = mimes;
         this.config = config;
         this.client = socket;
@@ -37,15 +38,14 @@ public class Worker extends Thread{
             b.add(currentLine + "\n");
             completeLine += currentLine;
         }
-
-        run();
     }
 
     // Return type?
-    public void run (){
+    @Override
+    public void run(){
 
         // Create request
-        if (!completeLine.isEmpty()) {
+        if (completeLine != "") {
             s = b.build();
             myReq = new Request(s);
             myReq.printMe();
@@ -59,16 +59,14 @@ public class Worker extends Thread{
 
             // Send response
             ResponseFactory rf = new ResponseFactory();
-            Response myResponse = rf.getResponse(myReq, res);
 
             try {
+                Response myResponse = rf.getResponse(myReq, res);
                 myResponse.send(client.getOutputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
-
-
     }
 }

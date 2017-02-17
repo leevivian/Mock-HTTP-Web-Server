@@ -8,7 +8,7 @@ import java.io.File;
 public class ResponseFactory {
 
 
-    public static Response getResponse(Request request, Resource resource) {
+    public Response getResponse(Request request, Resource resource) {
         //TODO: Access checks
         if (resource.isProtected() == true){
             //401 and 403 erros here
@@ -33,6 +33,7 @@ public class ResponseFactory {
                         //TODO: returns for POST & HEAD in get
                         return new Response(resource, 200);
                     default:
+                        return new Response(resource, 200);
                 }
             }
             else {

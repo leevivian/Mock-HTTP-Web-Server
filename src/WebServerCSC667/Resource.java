@@ -39,8 +39,8 @@ public class Resource {
 
         checkContainsScriptAliasKey(temp, myConf);
         checkContainsAliasKey(temp, myConf);
-        System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
-        System.out.println("uri: " +  uri);
+       // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
+        //System.out.println("uri: " +  uri);
 /*
         if (0 == 0) {
             responseCode = 200;
@@ -53,9 +53,9 @@ public class Resource {
         if (modifiedURI == false) {
             this.myPath = docuRoot + myURIString;
         }
-        System.out.println("docuRoot: " + docuRoot);
-        System.out.println("myURIString: " + myURIString);
-        System.out.println("myPath: " + this.myPath);
+       // System.out.println("docuRoot: " + docuRoot);
+        //System.out.println("myURIString: " + myURIString);
+        //System.out.println("myPath: " + this.myPath);
 
         //TODO: File checks do not work because they check the jrob server
         //but the file Check works
@@ -68,7 +68,7 @@ public class Resource {
 
         // Get absolute path?
         absolutePath = myPath;
-        System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
+        //System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
 
         try {
             // needs encoding otherwise - URISyntaxException: Illegal character in path
@@ -153,6 +153,7 @@ public class Resource {
                 '}';
     }
 
+    /*
     public static void main (String args[]) throws URISyntaxException{
         HttpdConf myHttpdConf = new HttpdConf("httpd.conf");
 
@@ -171,7 +172,7 @@ public class Resource {
                 "cache-control: no-cache\n" +
                 "Postman-Token: 69936131-e3f1-4e70-9a2f-dbb51d33c814\n" +
                 "User-Agent: PostmanRuntime/3.0.9\n" +
-                "Accept: */*\n" +
+                "Accept: hkhjh\n" +
                 "Host: localhost:8096\n" +
                 "accept-encoding: gzip, deflate\n" +
                 "content-length: 0\n" +
@@ -183,5 +184,6 @@ public class Resource {
 
         Response test = ResponseFactory.getResponse(myReq, myRes);
     }
+    */
 
 }
