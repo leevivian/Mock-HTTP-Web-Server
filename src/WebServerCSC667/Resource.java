@@ -63,7 +63,7 @@ public class Resource {
         checkContainsScriptAliasKey(temp, myConf);
         checkContainsAliasKey(temp, myConf);
         setContentType(temp, myMimeType);
-        System.out.println("PASSED MIME");
+        //System.out.println("PASSED MIME");
        // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
         //System.out.println("uri: " +  uri);
 

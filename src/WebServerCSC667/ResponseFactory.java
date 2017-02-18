@@ -63,7 +63,7 @@ public class ResponseFactory {
                         if (resource.isModifiedURI() == true){
                             //TODO: implement body correctly
                             try {
-                                resource.setBody(Files.readAllBytes((Paths.get(resource.getAbsolutePath()))));
+                                resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
