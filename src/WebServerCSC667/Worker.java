@@ -50,8 +50,12 @@ public class Worker extends Thread{
     }
 
     public void run(){
-        myReq = new Request(s);
-        myReq.parse();
+        try {
+            myReq = new Request(s);
+            myReq.parse();
+        } catch (ArrayIndexOutOfBoundsException badRequest) {
+            throw new BadRequest(client);
+        }
 
         // Create resource
         try {

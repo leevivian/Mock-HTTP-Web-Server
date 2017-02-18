@@ -17,7 +17,6 @@ public class Request {
 
     public Request (String test){
         myStr = test;
-        parse();
     }
 
     public Request (Stream client) {
@@ -28,7 +27,7 @@ public class Request {
         }
     }
 
-    public void parse() {
+    public void parse() throws BadRequest{
         boolean contentLength = false;
         String[] arr = (myStr.toString()).split("[\n\r]+");
 

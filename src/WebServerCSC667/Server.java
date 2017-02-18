@@ -49,32 +49,3 @@ public class Server {
 
 }
 
-
-/*
-
- // Send response
-                ResponseFactory rf = new ResponseFactory();
-
-                try {
-                    Response myResponse = rf.getResponse(myReq, res);
-                    myResponse.send(connection.getOutputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-
-            OutputStream out = connection.getOutputStream();
-            PrintStream ps = new PrintStream(out);
-            ps.println("Hi I'm the output Stream <3");
-
-            ps.flush();
-            ps.close();
-
-            try {
-                out.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
- */

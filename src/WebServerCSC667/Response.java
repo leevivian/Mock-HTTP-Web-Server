@@ -49,7 +49,7 @@ Content-Type: text/html; charset=iso-8859-1
                 "\nContent-Length: " +  resource.getBody().length +//size of file
                 "\nConnection: " + //keep-alive?
                 "\nContent-Type: " + resource.getContentType() +
-                "\n\n Body:" + new String(resource.getBody());  //value of mimetype key
+                "\n\n" + new String(resource.getBody());  //value of mimetype key
     }
 
     public String getReasonPhrase(int code){
