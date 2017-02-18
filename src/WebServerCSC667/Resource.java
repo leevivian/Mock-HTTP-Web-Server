@@ -36,7 +36,7 @@ public class Resource {
         return body;
     }
 
-    byte[] body;
+    byte[] body = "".getBytes();
 
     private boolean modifiedURI = false;
 
