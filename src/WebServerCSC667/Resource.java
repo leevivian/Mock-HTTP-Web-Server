@@ -18,7 +18,12 @@ public class Resource {
     private String myURIString;
     private String docuRoot;
     private String absolutePath;
-    private String mimeTypeValue;
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    private String contentType;
     private File file;
     private String myPath;
 
@@ -50,13 +55,14 @@ public class Resource {
     public Resource (String uri, HttpdConf config, MimeTypes mimeTypes) throws URISyntaxException{
 
         myConf = config;
-        myURIString = uri.replaceAll("/", "");
+        myURIString = uri;
+        //myURIString = uri.replaceAll("/", "");
         myMimeType = mimeTypes;
         String[] temp = uri.split("/");
 
         checkContainsScriptAliasKey(temp, myConf);
         checkContainsAliasKey(temp, myConf);
-        //checkMimeType(temp, myMimeType);
+        setContentType(temp, myMimeType);
         System.out.println("PASSED MIME");
        // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
         //System.out.println("uri: " +  uri);
@@ -123,15 +129,17 @@ public class Resource {
         }
         return false;
     }
-    public void checkMimeType(String[] temp, MimeTypes mimeTypes){
+    public void setContentType(String[] temp, MimeTypes mimeTypes){
         String[] tempForTemp = temp;
+
         System.out.println("TEMP ARRAY: " + tempForTemp[tempForTemp.length-1]);
-        String [] mimeExtension = tempForTemp[tempForTemp.length-1].split(".");
+        String[] mimeExtension = (tempForTemp[tempForTemp.length-1]).split("\\.");
+        System.out.println("MIMELENGTH:" + mimeExtension.length);
         System.out.println(mimeExtension[0]);
         if (mimeExtension.length > 1) {
-            mimeTypes.lookup(mimeExtension[mimeExtension.length-1]);
-            System.out.println("mimeTypes CHECKMETEST" + mimeTypes.lookup(mimeExtension[mimeExtension.length-1]));
-            mimeTypeValue = mimeTypes.lookup(mimeExtension[1]);
+            contentType = mimeTypes.lookup(mimeExtension[mimeExtension.length-1]);
+            System.out.println("CONTENT TYHPE CHECK: " + contentType);
+
         }
 
     }
