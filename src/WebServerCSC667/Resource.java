@@ -20,23 +20,24 @@ public class Resource {
     private String absolutePath;
     private String contentType;
     private File file;
-    private String myPath;
+    private String myPath = "public_html/index.html";
     private boolean modifiedScriptAliasURI = false;
+    private boolean modifiedURI = false;
+
     byte[] body = "".getBytes();
 
     public void setBody(byte[] body) {
         this.body = body;
     }
-
     public byte[] getBody() {
         return body;
     }
     public String getContentType() {
         return contentType;
     }
-
-    private boolean modifiedURI = false;
-
+    public String getAbsolutePath(){
+        return absolutePath;
+    }
     public boolean isModifiedScriptAliasURI() {
         return modifiedScriptAliasURI;
     }
@@ -51,7 +52,6 @@ public class Resource {
 
         myConf = config;
         myURIString = uri;
-        //myURIString = uri.replaceAll("/", "");
         myMimeType = mimeTypes;
 
         checkContainsScriptAliasKey(uri, myConf);
@@ -82,17 +82,12 @@ public class Resource {
 
     }
 
-    public String getAbsolutePath(){
-        return absolutePath;
-    }
-
     public boolean isScript(){
         if ((modifiedScriptAliasURI == true) && (myConf.getScriptAliases() != null)) {
             return true;
         }
         return false;
     }
-
 
     // If a path is protected, authentification process should occur
     public boolean isProtected(){
