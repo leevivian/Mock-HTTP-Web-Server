@@ -29,44 +29,44 @@ public class Worker extends Thread{
         this.client = socket;
 
         String currentLine;
-        br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        b = Stream.builder();
+        completeLine = "";
+        BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        Stream.Builder<String> b = Stream.builder();
 
         while((currentLine = br.readLine()) != null) {
-            System.out.println(currentLine);
 
-            b.add(currentLine + "\n");
+            b.accept(currentLine + "\n");
             completeLine += currentLine;
+
+            if (currentLine.isEmpty()) {
+                break;
+            }
+        }
+
+        if (completeLine != "") {
+            s = b.build();
+            run();
         }
     }
 
-    // Return type?
-    @Override
     public void run(){
+        myReq = new Request(s);
+        myReq.parse();
 
-        // Create request
-        if (completeLine != "") {
-            s = b.build();
-            myReq = new Request(s);
-            myReq.printMe();
+        // Create resource
+        try {
+            res = new Resource(myReq.getURI(), config, mimes);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
-            // Create resource
-            try {
-                res = new Resource(myReq.getURI(), config, mimes);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
+        ResponseFactory rf = new ResponseFactory();
 
-            // Send response
-            ResponseFactory rf = new ResponseFactory();
-
-            try {
-                Response myResponse = rf.getResponse(myReq, res);
-                myResponse.send(client.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+        try {
+            Response myResponse = rf.getResponse(myReq, res);
+            myResponse.send(client.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

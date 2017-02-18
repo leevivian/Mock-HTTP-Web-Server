@@ -33,50 +33,8 @@ public class Server {
         while (true) {
             connection = socket.accept();
 
-            //Thread thread = new Worker(connection, configuration, mimeTypes);
-            //thread.run();
+            Worker thread = new Worker(connection, configuration, mimeTypes);
             // *******
-
-            String currentLine;
-            completeLine = "";
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            Stream.Builder<String> b = Stream.builder();
-
-            while((currentLine = br.readLine()) != null) {
-                System.out.println(currentLine);
-
-                b.add(currentLine + "\n");
-                completeLine += currentLine;
-
-                if (currentLine.isEmpty()) {
-                    break;
-                }
-            }
-
-
-            if (completeLine != "") {
-                Stream<String> s = b.build();
-                myReq = new Request(s);
-                myReq.parse();
-
-                // Create resource
-                try {
-                    res = new Resource(myReq.getURI(), configuration, mimeTypes);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
-                ResponseFactory rf = new ResponseFactory();
-
-                try {
-                    Response myResponse = rf.getResponse(myReq, res);
-                    myResponse.send(connection.getOutputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
 
             connection.close();
         }
