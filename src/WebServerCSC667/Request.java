@@ -26,8 +26,6 @@ public class Request {
         while (it.hasNext()) {
             myStr += it.next().toString();
         }
-
-        parse();
     }
 
     public void parse() {

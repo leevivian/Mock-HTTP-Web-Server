@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Resource {
@@ -17,17 +18,31 @@ public class Resource {
     private String myURIString;
     private String docuRoot;
     private String absolutePath;
-
+    private String mimeTypeValue;
     private File file;
     private String myPath;
-    private boolean modifiedURI = false;
-    private boolean modifiedScriptAliasURI = false;
 
-    public int getResponseCode() {
-        return responseCode;
+
+    public void setBody(List<String> body) {
+        this.body = body;
     }
 
-    private int responseCode;
+    public List<String> getBody() {
+        return body;
+    }
+
+    List<String> body;
+
+    private boolean modifiedURI = false;
+
+    public boolean isModifiedScriptAliasURI() {
+        return modifiedScriptAliasURI;
+    }
+    public boolean isModifiedURI() {
+        return modifiedURI;
+    }
+    private boolean modifiedScriptAliasURI = false;
+
 
     // For test
     static String decodeMe;
@@ -35,14 +50,16 @@ public class Resource {
     public Resource (String uri, HttpdConf config, MimeTypes mimeTypes) throws URISyntaxException{
 
         myConf = config;
-        myURIString = uri;
+        myURIString = uri.replaceAll("/", "");
         myMimeType = mimeTypes;
         String[] temp = uri.split("/");
 
         checkContainsScriptAliasKey(temp, myConf);
         checkContainsAliasKey(temp, myConf);
-        System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
-        System.out.println("uri: " +  uri);
+        //checkMimeType(temp, myMimeType);
+        System.out.println("PASSED MIME");
+       // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
+        //System.out.println("uri: " +  uri);
 /*
         if (0 == 0) {
             responseCode = 200;
@@ -68,9 +85,12 @@ public class Resource {
             myPath = "public_html/index.html";
         }
 
+        //TODO: delte after tests
+        myPath = "public_html"+ myURIString;
+
         // Get absolute path?
         absolutePath = myPath;
-        System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
+        //System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
 
         try {
             // needs encoding otherwise - URISyntaxException: Illegal character in path
@@ -78,6 +98,8 @@ public class Resource {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+
 
     }
 
@@ -101,7 +123,18 @@ public class Resource {
         }
         return false;
     }
+    public void checkMimeType(String[] temp, MimeTypes mimeTypes){
+        String[] tempForTemp = temp;
+        System.out.println("TEMP ARRAY: " + tempForTemp[tempForTemp.length-1]);
+        String [] mimeExtension = tempForTemp[tempForTemp.length-1].split(".");
+        System.out.println(mimeExtension[0]);
+        if (mimeExtension.length > 1) {
+            mimeTypes.lookup(mimeExtension[mimeExtension.length-1]);
+            System.out.println("mimeTypes CHECKMETEST" + mimeTypes.lookup(mimeExtension[mimeExtension.length-1]));
+            mimeTypeValue = mimeTypes.lookup(mimeExtension[1]);
+        }
 
+    }
     //Check if uri has a scriptAlias
     //Starts @ the end od temp[] index
     //TODO: Remove ghetto parse "/"
@@ -155,6 +188,7 @@ public class Resource {
                 '}';
     }
 
+    /*
     public static void main (String args[]) throws URISyntaxException{
         HttpdConf myHttpdConf = new HttpdConf("httpd.conf");
         MimeTypes myMime = new MimeTypes( "mime.types");
@@ -174,7 +208,7 @@ public class Resource {
                 "cache-control: no-cache\n" +
                 "Postman-Token: 69936131-e3f1-4e70-9a2f-dbb51d33c814\n" +
                 "User-Agent: PostmanRuntime/3.0.9\n" +
-                "Accept: */*\n" +
+                "Accept: hkhjh\n" +
                 "Host: localhost:8096\n" +
                 "accept-encoding: gzip, deflate\n" +
                 "content-length: 0\n" +
@@ -187,5 +221,6 @@ public class Resource {
         Response test = ResponseFactory.getResponse(myReq, myRes);
         System.out.println(myReq.getHeaders());
     }
+    */
 
 }

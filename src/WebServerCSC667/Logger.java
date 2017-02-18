@@ -73,7 +73,7 @@ public class Logger {
 
         try {
             Resource res = new Resource(myReq.getURI(), config, myMime);
-            Response response = new Response(res, 200);
+            Response response = ResponseFactory.getResponse(myReq, res);
             log.write(myReq, response);
         } catch (URISyntaxException e) {
             e.printStackTrace();

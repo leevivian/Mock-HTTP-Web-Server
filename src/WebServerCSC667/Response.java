@@ -1,11 +1,10 @@
 package WebServerCSC667;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.InetAddress;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.stream.Stream;
 
 /**
  * Created by rain2 on 2/3/2017.
@@ -29,6 +28,7 @@ public class Response {
     private String httpVersion = "1.1";
     String responseString = "";
 
+
 /*
 HTTP/1.1 404 Not Found
 Date: Sun, 18 Oct 2012 10:36:20 GMT
@@ -45,11 +45,11 @@ Content-Type: text/html; charset=iso-8859-1
         reasonPhrase = getReasonPhrase(code);
         responseString = "HTTP/" + httpVersion + " " +code + " " + reasonPhrase +
                 "\nDate: " + new Date() +
-                "\nServer: " + "CSC667 WebServer" + //name?
+                "\nServer: " + //name?
                 "\nContent-Length: " + //size of file
                 "\nConnection: " + //keep-alive?
-                "\nContent-Type: ";  //value of mimetype key
-        //System.out.println(responseString);
+                "\nContent-Type: "
+                +"\n\n Body:" + resource.getBody();  //value of mimetype key
     }
 
     public String getReasonPhrase(int code){
@@ -58,8 +58,10 @@ Content-Type: text/html; charset=iso-8859-1
                 return "OK";
             case 201:
                 return "Created";
-            case 304:
+            case 204:
                 return "No Content";
+            case 304:
+                return "Not Modified";
             case 400:
                 return "Bad Request";
             case 401:
@@ -77,19 +79,23 @@ Content-Type: text/html; charset=iso-8859-1
     }
     //TODO: make send non void
     public void send(OutputStream out){
+        PrintStream ps = new PrintStream(out);
+        ps.println(responseString);
+        /*
+        ps.println("HTTP/" + httpVersion + " " +code + " " + reasonPhrase);
+        ps.println("Date: " + new Date() + "");
+        ps.println("Server: " + "Hey there I'm the Server" + "");
+        ps.println("Content-Type: " + "Hey there I'm the content type" + "\n");
+*/
 
-        //out.write(responseString.getBytes(Charset.forName("UTF-8")));
-        //PrintWriter pw = new PrintWriter(System.out);
-        //pw.write(responseString);
-        //byte[] bytes = responseString.getBytes();
-        PrintWriter test = new PrintWriter( out, true );
-        //System.out.println("bytes:" + bytes.length);
+        ps.flush();
+        ps.close();
+        try {
+            out.close();
 
-
-
-        test.println("jlkjlkjljkjlk");
-        System.out.println("SEND TEST*********************");
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
