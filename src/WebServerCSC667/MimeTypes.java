@@ -24,7 +24,7 @@ public class MimeTypes extends ConfigurationReader{
 
     public void parse(){
         while(hasMoreLines() == true){
-            String[] temp = nextLine().split(" ");
+            String[] temp = nextLine().replaceAll("\\s+", " ").split(" ");
 
             if ((temp.length >= 2) && (temp[0].startsWith("#") == false)) {
                 for (int index = 1; index < temp.length; index++){
