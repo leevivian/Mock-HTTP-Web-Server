@@ -45,17 +45,26 @@ public class Worker extends Thread{
 
         if (completeLine != "") {
             s = b.build();
-            run();
+            parser();
+        }
+    }
+
+    public void parser() {
+        try {
+            myReq = new Request(s);
+            myReq.parse();
+
+            if (myReq.flagBR) {
+                throw new BadRequest(client);
+            } else {
+                run();
+            }
+        } catch (BadRequest badRequest) {
+            badRequest.printStackTrace();
         }
     }
 
     public void run(){
-        try {
-            myReq = new Request(s);
-            myReq.parse();
-        } catch (ArrayIndexOutOfBoundsException badRequest) {
-            throw new BadRequest(client);
-        }
 
         // Create resource
         try {

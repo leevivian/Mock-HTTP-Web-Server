@@ -13,6 +13,8 @@ public class Request {
     private String httpVersion;
     private HashMap headers;
 
+    public boolean flagBR = false;
+
     private String myStr = "";
 
     public Request (String test){
@@ -27,33 +29,39 @@ public class Request {
         }
     }
 
-    public void parse() throws BadRequest{
+    public void parse(){
         boolean contentLength = false;
         String[] arr = (myStr.toString()).split("[\n\r]+");
 
         // HTTP_METHOD IDENTIFIER HTTP_VERSION
         String[] firstLine = arr[0].split("\\s+");
-        verb = firstLine[0];
-        uri = firstLine[1];
-        httpVersion = firstLine[2];
 
-        // test
-        for (int j = 0; j < arr.length; j++) {
-            System.out.println(arr[j]);
-        }
+        if (firstLine.length < 3) {
+            flagBR = true;
+        } else {
 
-        int index = 1;
-        headers = new HashMap();
-        while (arr[index].contains(": ") && index < arr.length - 1) { // or while != " " ?
-            String[] headersArr = arr[index].split(": ");
-            headers.put(headersArr[0], headersArr[1]);
-            index++;
-        }
+            verb = firstLine[0];
+            uri = firstLine[1];
+            httpVersion = firstLine[2];
+
+            // test
+            for (int j = 0; j < arr.length; j++) {
+                System.out.println(arr[j]);
+            }
+
+            int index = 1;
+            headers = new HashMap();
+            while (arr[index].contains(": ") && index < arr.length - 1) { // or while != " " ?
+                String[] headersArr = arr[index].split(": ");
+                headers.put(headersArr[0], headersArr[1]);
+                index++;
+            }
 
 
-        // What if content-length is 0?
-        if (headers.containsKey("Content-Length") || headers.containsKey("content-length")) {
-            body = arr[index];
+            // What if content-length is 0?
+            if (headers.containsKey("Content-Length") || headers.containsKey("content-length")) {
+                body = arr[index];
+            }
         }
 
     }
