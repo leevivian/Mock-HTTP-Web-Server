@@ -20,7 +20,7 @@ public class Resource {
     private String absolutePath;
     private String contentType;
     private File file;
-    private String myPath = "./public_html/index.html";
+    private String myPath = "";
     private boolean modifiedScriptAliasURI = false;
     private boolean modifiedURI = false;
 
@@ -56,7 +56,7 @@ public class Resource {
 
         checkContainsScriptAliasKey(uri, myConf);
         checkContainsAliasKey(uri, myConf);
-        setContentType(uri, myMimeType);
+        contentType = setContentType(uri, myMimeType);
         //System.out.println("PASSED MIME");
        // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
         //System.out.println("uri: " +  uri);
@@ -66,12 +66,19 @@ public class Resource {
         if (modifiedURI == false) {
             this.myPath = docuRoot + myURIString;
         }
+
         System.out.println("docuRoot: " + docuRoot);
         System.out.println("myURIString: " + myURIString);
         System.out.println("myPath: " + this.myPath);
 
-        absolutePath = myPath;
         //System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
+        //TODO: uri == / or null append
+        if (uri == "/" || uri == ""){
+            if (new File(getAbsolutePath()).isFile() == true){
+                this.myPath = ("./public_html/index.html");
+            }
+        }
+        absolutePath = myPath;
 
         try {
             // needs encoding otherwise - URISyntaxException: Illegal character in path
@@ -98,17 +105,23 @@ public class Resource {
         return false;
     }
 
-    public void setContentType(String uri, MimeTypes mimeTypes){
+    public String setContentType(String uri, MimeTypes mimeTypes){
+        //System.out.println("URI: " +uri);
         String[] temp = uri.split("/");
 
-        if (temp.length > 1) {
+        //System.out.println("LENGTH" + temp.length);
+        if (temp.length < 1){
+            return mimeTypes.lookup("html");
+        }
+        else if (temp.length > 1) {
             String[] mimeExtension = (temp[temp.length - 1]).split("\\.");
 
             if (mimeExtension.length > 1) {
-                contentType = mimeTypes.lookup(mimeExtension[mimeExtension.length - 1]);
-                //System.out.println("CONTENT TYHPE CHECK: " + contentType);
+                System.out.println("CONTENT TYHPE CHECK: " + contentType);
+                return mimeTypes.lookup(mimeExtension[mimeExtension.length - 1]);
             }
         }
+        return null;
     }
     //Check if uri has a scriptAlias
     //Starts @ the end od temp[] index
