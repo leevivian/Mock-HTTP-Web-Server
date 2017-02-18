@@ -18,15 +18,11 @@ public class Resource {
     private String myURIString;
     private String docuRoot;
     private String absolutePath;
-
-    public String getContentType() {
-        return contentType;
-    }
-
     private String contentType;
     private File file;
     private String myPath;
-
+    private boolean modifiedScriptAliasURI = false;
+    byte[] body = "".getBytes();
 
     public void setBody(byte[] body) {
         this.body = body;
@@ -35,8 +31,9 @@ public class Resource {
     public byte[] getBody() {
         return body;
     }
-
-    byte[] body = "".getBytes();
+    public String getContentType() {
+        return contentType;
+    }
 
     private boolean modifiedURI = false;
 
@@ -46,8 +43,6 @@ public class Resource {
     public boolean isModifiedURI() {
         return modifiedURI;
     }
-    private boolean modifiedScriptAliasURI = false;
-
 
     // For test
     static String decodeMe;
@@ -58,11 +53,10 @@ public class Resource {
         myURIString = uri;
         //myURIString = uri.replaceAll("/", "");
         myMimeType = mimeTypes;
-        String[] temp = uri.split("/");
 
-        checkContainsScriptAliasKey(temp, myConf);
-        checkContainsAliasKey(temp, myConf);
-        setContentType(temp, myMimeType);
+        checkContainsScriptAliasKey(uri, myConf);
+        checkContainsAliasKey(uri, myConf);
+        setContentType(uri, myMimeType);
         //System.out.println("PASSED MIME");
        // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
         //System.out.println("uri: " +  uri);
@@ -109,19 +103,24 @@ public class Resource {
         return false;
     }
 
-    public void setContentType(String[] temp, MimeTypes mimeTypes){
+    public void setContentType(String uri, MimeTypes mimeTypes){
+        String[] temp = uri.split("/");
 
-        String[] mimeExtension = (temp[temp.length-1]).split("\\.");
+        if (temp.length > 1) {
+            String[] mimeExtension = (temp[temp.length - 1]).split("\\.");
 
-        if (mimeExtension.length > 1) {
-            contentType = mimeTypes.lookup(mimeExtension[mimeExtension.length-1]);
-            //System.out.println("CONTENT TYHPE CHECK: " + contentType);
+            if (mimeExtension.length > 1) {
+                contentType = mimeTypes.lookup(mimeExtension[mimeExtension.length - 1]);
+                //System.out.println("CONTENT TYHPE CHECK: " + contentType);
+            }
         }
     }
     //Check if uri has a scriptAlias
     //Starts @ the end od temp[] index
     //TODO: Remove ghetto parse "/"
-    public void checkContainsScriptAliasKey(String[] temp, HttpdConf config) {
+    public void checkContainsScriptAliasKey(String uri, HttpdConf config) {
+        String[] temp = uri.split("/");
+
         for (int i = temp.length-1; i > 0; i--) {
             if (config.getScriptAliases().containsKey("/" + temp[i] + "/")) {
                 System.out.println("KEY TESTS");
@@ -140,7 +139,9 @@ public class Resource {
             }
         }
     }
-    public void checkContainsAliasKey(String[] temp, HttpdConf config){
+    public void checkContainsAliasKey(String uri, HttpdConf config){
+        String[] temp = uri.split("/");
+
         for (int i = temp.length-1; i > 0; i--) {
             if (config.getAliases().containsKey("/"+temp[i]+"/")) {
                 System.out.println("KEY TESTS");
