@@ -29,7 +29,14 @@ public class ResponseFactory {
             } else if (resource.isScript() == false) {
                 File file = new File(resource.getAbsolutePath());
                 switch (request.getVerb()) {
+                    //TODO: make dir if content type = null
                     case "PUT":
+                        if (resource.getContentType() == null){
+                            new File(resource.getAbsolutePath()).mkdirs();
+                            System.out.println("MAKE NEW DIR");
+                            return new Response(resource, 201);
+
+                        }
                         //if file already exists
                         if (file.isFile() == true) {
                             return new Response(resource, 400);
