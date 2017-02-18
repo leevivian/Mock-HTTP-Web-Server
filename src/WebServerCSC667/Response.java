@@ -46,10 +46,10 @@ Content-Type: text/html; charset=iso-8859-1
         responseString = "HTTP/" + httpVersion + " " + code + " " + reasonPhrase +
                 "\nDate: " + new Date() +
                 "\nServer: CSC 667 Sailor Scouts" + //name?
-                "\nContent-Length: " +//size of file
+                "\nContent-Length: " +  resource.getBody().length +//size of file
                 "\nConnection: " + //keep-alive?
                 "\nContent-Type: " + resource.getContentType() +
-                "\n\n Body:" + resource.getBody();  //value of mimetype key
+                "\n\n Body:" + new String(resource.getBody());  //value of mimetype key
     }
 
     public String getReasonPhrase(int code){

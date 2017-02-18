@@ -25,14 +25,13 @@ public class ResponseFactory {
             if (new File(resource.getAbsolutePath()).isFile() == true && (resource.isScript() == true)) {
                 //check if script alias
                 //TODO: add script execusion
-                return new Response(resource,200);
-            }
-            else if (resource.isScript() == false) {
+                return new Response(resource, 200);
+            } else if (resource.isScript() == false) {
                 File file = new File(resource.getAbsolutePath());
-                switch(request.getVerb()) {
+                switch (request.getVerb()) {
                     case "PUT":
                         //if file already exists
-                        if (file.isFile() == true){
+                        if (file.isFile() == true) {
                             return new Response(resource, 400);
                         }
                         //do put
@@ -49,48 +48,42 @@ public class ResponseFactory {
                         }
 
                     case "DELETE":
-                        if (file.isFile() == true){
-                        file.delete();
-                        return new Response(resource,204);
-                        }
-                        else {
+                        if (file.isFile() == true) {
+                            file.delete();
+                            return new Response(resource, 204);
+                        } else {
                             System.out.println("File Doesn't exist");
-                            return  new Response(resource, 400);
+                            return new Response(resource, 400);
                         }
 
-                    //TODO:
+                        //TODO:
                     case "GET":
-                        if (resource.isModifiedURI() == true){
-                            //TODO: implement body correctly
+                        if (resource.isModifiedURI() == true) {
                             try {
                                 resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
+                                //System.out.println(resource.getBody().)
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             return new Response(resource, 200);
-                        }
-                        else return new Response(resource, 304);
+                        } else return new Response(resource, 304);
 
                     case "POST":
-                            //TODO: implement body correctly
-                            try {
-                                resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            return new Response(resource, 200);
-
-                    //TODO: implement body correctly
-                    case "HEAD":
-                        if (resource.isModifiedURI() == true){
-                            return new Response(resource, 200);
+                        try {
+                            resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                        else return new Response(resource, 304);
+                        return new Response(resource, 200);
+
+                    case "HEAD":
+                        if (resource.isModifiedURI() == true) {
+                            return new Response(resource, 200);
+                        } else return new Response(resource, 304);
                     default:
                         return new Response(resource, 400);
                 }
-            }
-            else {
+            } else {
                 return new Response(resource, 404);
             }
         }
