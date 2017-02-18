@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Resource {
@@ -18,16 +19,35 @@ public class Resource {
     private String docuRoot;
     private String absolutePath;
 
-    private File file;
-    private String myPath;
-    private boolean modifiedURI = false;
-    private boolean modifiedScriptAliasURI = false;
-
-    public int getResponseCode() {
-        return responseCode;
+    public String getContentType() {
+        return contentType;
     }
 
-    private int responseCode;
+    private String contentType;
+    private File file;
+    private String myPath;
+
+
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
+
+    public byte[] getBody() {
+        return body;
+    }
+
+    byte[] body;
+
+    private boolean modifiedURI = false;
+
+    public boolean isModifiedScriptAliasURI() {
+        return modifiedScriptAliasURI;
+    }
+    public boolean isModifiedURI() {
+        return modifiedURI;
+    }
+    private boolean modifiedScriptAliasURI = false;
+
 
     // For test
     static String decodeMe;
@@ -36,39 +56,26 @@ public class Resource {
 
         myConf = config;
         myURIString = uri;
+        //myURIString = uri.replaceAll("/", "");
         myMimeType = mimeTypes;
         String[] temp = uri.split("/");
 
         checkContainsScriptAliasKey(temp, myConf);
         checkContainsAliasKey(temp, myConf);
+        setContentType(temp, myMimeType);
+        System.out.println("PASSED MIME");
        // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
         //System.out.println("uri: " +  uri);
-/*
-        if (0 == 0) {
-            responseCode = 200;
-            new Response(this);
-            return;
-        }
-*/
+
         // ******* RESOLVE PATH *******
         docuRoot = config.getDocumentRoot();
         if (modifiedURI == false) {
             this.myPath = docuRoot + myURIString;
         }
-       // System.out.println("docuRoot: " + docuRoot);
-        //System.out.println("myURIString: " + myURIString);
-        //System.out.println("myPath: " + this.myPath);
+        System.out.println("docuRoot: " + docuRoot);
+        System.out.println("myURIString: " + myURIString);
+        System.out.println("myPath: " + this.myPath);
 
-        //TODO: File checks do not work because they check the jrob server
-        //but the file Check works
-        // If the path is not a file, append DirIndex
-
-        if (new File(myPath).isFile() == true){
-            //System.out.println("ITS A FILE");
-            myPath = "public_html/index.html";
-        }
-
-        // Get absolute path?
         absolutePath = myPath;
         //System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
 
@@ -102,6 +109,15 @@ public class Resource {
         return false;
     }
 
+    public void setContentType(String[] temp, MimeTypes mimeTypes){
+
+        String[] mimeExtension = (temp[temp.length-1]).split("\\.");
+
+        if (mimeExtension.length > 1) {
+            contentType = mimeTypes.lookup(mimeExtension[mimeExtension.length-1]);
+            //System.out.println("CONTENT TYHPE CHECK: " + contentType);
+        }
+    }
     //Check if uri has a scriptAlias
     //Starts @ the end od temp[] index
     //TODO: Remove ghetto parse "/"
