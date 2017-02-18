@@ -28,15 +28,15 @@ public class Resource {
     private String myPath;
 
 
-    public void setBody(List<String> body) {
+    public void setBody(byte[] body) {
         this.body = body;
     }
 
-    public List<String> getBody() {
+    public byte[] getBody() {
         return body;
     }
 
-    List<String> body;
+    byte[] body;
 
     private boolean modifiedURI = false;
 
@@ -66,13 +66,7 @@ public class Resource {
         System.out.println("PASSED MIME");
        // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
         //System.out.println("uri: " +  uri);
-/*
-        if (0 == 0) {
-            responseCode = 200;
-            new Response(this);
-            return;
-        }
-*/
+
         // ******* RESOLVE PATH *******
         docuRoot = config.getDocumentRoot();
         if (modifiedURI == false) {
@@ -82,19 +76,6 @@ public class Resource {
         System.out.println("myURIString: " + myURIString);
         System.out.println("myPath: " + this.myPath);
 
-        //TODO: File checks do not work because they check the jrob server
-        //but the file Check works
-        // If the path is not a file, append DirIndex
-
-        if (new File(myPath).isFile() == true){
-            //System.out.println("ITS A FILE");
-            myPath = "public_html/index.html";
-        }
-
-        //TODO: delte after tests
-        myPath = "public_html"+ myURIString;
-
-        // Get absolute path?
         absolutePath = myPath;
         //System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
 
@@ -104,8 +85,6 @@ public class Resource {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
-
 
     }
 
@@ -129,19 +108,15 @@ public class Resource {
         }
         return false;
     }
-    public void setContentType(String[] temp, MimeTypes mimeTypes){
-        String[] tempForTemp = temp;
 
-        System.out.println("TEMP ARRAY: " + tempForTemp[tempForTemp.length-1]);
-        String[] mimeExtension = (tempForTemp[tempForTemp.length-1]).split("\\.");
-        System.out.println("MIMELENGTH:" + mimeExtension.length);
-        System.out.println(mimeExtension[0]);
+    public void setContentType(String[] temp, MimeTypes mimeTypes){
+
+        String[] mimeExtension = (temp[temp.length-1]).split("\\.");
+
         if (mimeExtension.length > 1) {
             contentType = mimeTypes.lookup(mimeExtension[mimeExtension.length-1]);
-            System.out.println("CONTENT TYHPE CHECK: " + contentType);
-
+            //System.out.println("CONTENT TYHPE CHECK: " + contentType);
         }
-
     }
     //Check if uri has a scriptAlias
     //Starts @ the end od temp[] index

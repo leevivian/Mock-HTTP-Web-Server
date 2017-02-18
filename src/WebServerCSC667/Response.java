@@ -38,18 +38,18 @@ Connection: Closed
 Content-Type: text/html; charset=iso-8859-1
  */
 
-    public Response (Resource resource, int code){
+    public Response (Resource resource, int code) {
         this.resource = resource;
         this.code = code;
         //
         reasonPhrase = getReasonPhrase(code);
-        responseString = "HTTP/" + httpVersion + " " +code + " " + reasonPhrase +
+        responseString = "HTTP/" + httpVersion + " " + code + " " + reasonPhrase +
                 "\nDate: " + new Date() +
-                "\nServer: " + //name?
-                "\nContent-Length: " + //size of file
+                "\nServer: CSC 667 Sailor Scouts" + //name?
+                "\nContent-Length: " +//size of file
                 "\nConnection: " + //keep-alive?
-                "\nContent-Type: "
-                +"\n\n Body:" + resource.getBody();  //value of mimetype key
+                "\nContent-Type: " + resource.getContentType() +
+                "\n\n Body:" + resource.getBody();  //value of mimetype key
     }
 
     public String getReasonPhrase(int code){
