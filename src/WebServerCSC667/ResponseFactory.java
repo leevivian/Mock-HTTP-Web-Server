@@ -17,6 +17,7 @@ public class ResponseFactory {
         //TODO: Access checks
         if (resource.isProtected() == true){
             //401 and 403 erros here
+            //if auth header -> auth
         }
         //start response
         //else if (resource.isProtected() == false || (resource.isProtected() && //is VALID PW))
@@ -65,15 +66,15 @@ public class ResponseFactory {
 
                         //TODO:
                     case "GET":
-                        if (resource.isModifiedURI() == true) {
+                       // if (resource.isModifiedURI() == true) {
                             try {
-                                resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
+                                resource.setBody(Files.readAllBytes(Paths.get("./public_html/index.html")));
                                 //System.out.println(resource.getBody().)
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             return new Response(resource, 200);
-                        } else return new Response(resource, 304);
+                        //} else return new Response(resource, 304);
 
                     case "POST":
                         try {

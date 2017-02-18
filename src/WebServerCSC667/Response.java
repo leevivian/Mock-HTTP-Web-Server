@@ -23,7 +23,7 @@ Content-Length header is present)
 */
 public class Response {
     int code; // status code
-    String reasonPhrase = "Response test";
+    String reasonPhrase = "";
     Resource resource;
     private String httpVersion = "1.1";
     String responseString = "";

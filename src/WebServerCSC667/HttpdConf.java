@@ -11,7 +11,7 @@ public class HttpdConf extends ConfigurationReader{
     private String documentRoot = "";
     private String serverRoot = "";
     private String logFileLocaction = "";
-    private int port = 80;
+    private int port = 8080;
 
     public int getPort() {
         return port;

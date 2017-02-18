@@ -20,7 +20,7 @@ public class Resource {
     private String absolutePath;
     private String contentType;
     private File file;
-    private String myPath = "public_html/index.html";
+    private String myPath = "./public_html/index.html";
     private boolean modifiedScriptAliasURI = false;
     private boolean modifiedURI = false;
 
