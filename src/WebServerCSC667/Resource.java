@@ -1,11 +1,13 @@
 package WebServerCSC667;
 
+import java.awt.*;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -44,6 +46,17 @@ public class Resource {
     public boolean isModifiedURI() {
         return modifiedURI;
     }
+
+    // V
+    HashMap reqheaders;
+
+    public void setHeaders(HashMap headers) {
+        reqheaders = headers;
+    }
+    public HashMap getHeaders() {
+        return reqheaders;
+    }
+    // V
 
     // For test
     static String decodeMe;

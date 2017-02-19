@@ -6,14 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created by rain2 on 2/3/2017.
- */
 public class ResponseFactory {
 
-
     public static Response getResponse(Request request, Resource resource) {
-        //TODO: implment error 500
+        //TODO: implment error 500 - this should be a wrapper around Worker
         //TODO: Access checks
         if (resource.isProtected() == true){
             //401 and 403 erros here
@@ -21,14 +17,27 @@ public class ResponseFactory {
         }
         //start response
         //else if (resource.isProtected() == false || (resource.isProtected() && //is VALID PW))
+
+        // TODO: This if statement is always true because .equals() should be used to compare strings
+        // Not sure why it's needed here?
         if (request.getVerb() != "PUT") {
             //if file doesn't exist
             if (new File(resource.getAbsolutePath()).isFile() == true && (resource.isScript() == true)) {
                 //check if script alias
-                //TODO: add script execusion
-                return new Response(resource, 200);
+
+                // TODO: Remove try catch, BR was for testing
+                if (resource.isModifiedScriptAliasURI()) {
+                    try {
+                        resource.setHeaders(request.getHeaders());
+                        return new ScriptResponse(resource, 200);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             } else if (resource.isScript() == false) {
                 File file = new File(resource.getAbsolutePath());
+
                 switch (request.getVerb()) {
                     //TODO: make dir if content type = null
                     case "PUT":
@@ -41,6 +50,7 @@ public class ResponseFactory {
                         //if file already exists
                         if (file.isFile() == true) {
                             return new Response(resource, 400);
+
                         }
                         //do put
                         else {

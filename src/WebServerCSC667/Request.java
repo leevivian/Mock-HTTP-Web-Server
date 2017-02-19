@@ -36,7 +36,13 @@ public class Request {
         // HTTP_METHOD IDENTIFIER HTTP_VERSION
         String[] firstLine = arr[0].split("\\s+");
 
-        if (firstLine.length < 3) {
+        if (!firstLine[0].matches("GET|POST|PUT|DELETE|HEAD")) {
+            System.out.println("1");
+        }
+
+
+
+        if (firstLine.length < 3 || !firstLine[0].matches("GET|POST|PUT|DELETE|HEAD")) {
             flagBR = true;
         } else {
 
@@ -44,10 +50,7 @@ public class Request {
             uri = firstLine[1];
             httpVersion = firstLine[2];
 
-            // test
-            for (int j = 0; j < arr.length; j++) {
-                System.out.println(arr[j]);
-            }
+            // TODO: If headers don't exist...
 
             int index = 1;
             headers = new HashMap();
@@ -56,7 +59,6 @@ public class Request {
                 headers.put(headersArr[0], headersArr[1]);
                 index++;
             }
-
 
             // What if content-length is 0?
             if (headers.containsKey("Content-Length") || headers.containsKey("content-length")) {

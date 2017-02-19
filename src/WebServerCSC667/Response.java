@@ -77,7 +77,7 @@ Content-Type: text/html; charset=iso-8859-1
                 return "ERROR: CODE NOT VALID";
         }
     }
-    //TODO: make send non void
+
     public void send(OutputStream out){
         PrintStream ps = new PrintStream(out);
         ps.println(responseString);
