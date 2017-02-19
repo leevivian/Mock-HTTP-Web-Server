@@ -25,7 +25,7 @@ public class Response {
     int code; // status code
     String reasonPhrase = "";
     Resource resource;
-    private String httpVersion = "1.1";
+    String httpVersion = "1.1";
     String responseString = "";
 
 

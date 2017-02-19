@@ -2,21 +2,31 @@ package WebServerCSC667;
 
 import java.io.*;
 import java.util.Map;
+import java.util.Date;
 
 public class ScriptResponse extends Response {
+
+    String currentLine;
+    String responseBody = "";
 
     public ScriptResponse (Resource resource, int code) throws IOException{
         super(resource, code);
 
-        ProcessBuilder processBuilder = new ProcessBuilder("public_html/cgi-bin/perl_env");
+        ProcessBuilder processBuilder = new ProcessBuilder(resource.getAbsolutePath());
         //processBuilder.directory(new File("/public_html/cgi-bin/perl_env"));
         setEnvironment(processBuilder.environment());
         Process process = processBuilder.start();
 
         BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-        while(inStreamReader.readLine() != null){
-            System.out.println("hi " + inStreamReader.readLine());
+        while((currentLine = inStreamReader.readLine()) != null){
+            System.out.println(inStreamReader.readLine());
+
+            responseBody += currentLine + "\n";
+
+            if (currentLine.isEmpty()) {
+                break;
+            }
         }
     }
 
@@ -29,13 +39,14 @@ public class ScriptResponse extends Response {
     @Override
     public void send(OutputStream out){
         PrintStream ps = new PrintStream(out);
-        ps.println(responseString);
-        /*
-        ps.println("HTTP/" + httpVersion + " " +code + " " + reasonPhrase);
-        ps.println("Date: " + new Date() + "");
-        ps.println("Server: " + "Hey there I'm the Server" + "");
-        ps.println("Content-Type: " + "Hey there I'm the content type" + "\n");
-*/
+
+        ps.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
+        ps.println("Date: " + new Date());
+        ps.println("Server: CSC 667 Sailor Scouts");
+        ps.println("Content-Length: " + responseBody.length());
+        ps.println("Content-Type: " +  resource.getContentType());
+        ps.println();
+        ps.println(responseBody);
 
         ps.flush();
         ps.close();
