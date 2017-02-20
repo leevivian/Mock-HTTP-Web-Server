@@ -11,9 +11,27 @@ import java.nio.file.Paths;
  */
 public class ConfigurationReader {
 
+    public File getFile() {
+        return file;
+    }
+
     private File file;
+
+    public void setParsedFile(String[] parsedFile) {
+        this.parsedFile = parsedFile;
+    }
+
     private String[] parsedFile;
     private int parsedFileIndex = 0;
+
+    public String getFileContents() {
+        return fileContents;
+    }
+
+    public void setFileContents(String fileContents) {
+        this.fileContents = fileContents;
+    }
+
     String fileContents;
 
     public ConfigurationReader() {
