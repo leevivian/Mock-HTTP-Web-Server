@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 
 public class ResponseFactory {
 
@@ -23,11 +24,11 @@ public class ResponseFactory {
                   Htaccess hta = new Htaccess();
                   //TODO: need request auth headers
                     if(request.getaccessHeaders.exists == false){
-                        return new Response(response, 401);
+                        return new UnauthorizedResponse(response);
                     }
                     //form username, password
                   if(hta.isAuthorized(username, password) == false){
-                      return new Response(response, 403);
+                      return new ForbiddenResponse(response);
                   }
                 }
             }
@@ -68,7 +69,7 @@ public class ResponseFactory {
                         }
                         //if file already exists
                         if (file.isFile() == true) {
-                            return new Response(resource, 400);
+                            return new NotFoundResponse(resource);
 
                         }
                         //do put
@@ -87,10 +88,10 @@ public class ResponseFactory {
                     case "DELETE":
                         if (file.isFile() == true) {
                             file.delete();
-                            return new Response(resource, 204);
+                            return new DeleteResponse(resource);
                         } else {
                             System.out.println("File Doesn't exist");
-                            return new Response(resource, 400);
+                            return new BadRequestResponse(resource);
                         }
 
                         //TODO:
@@ -103,10 +104,8 @@ public class ResponseFactory {
                                 e.printStackTrace();
                             }
                            return new OKResponse(resource);
-                            //Response get =  new Response(response, 200);
-                            //get.setSendBody(true);
-                            //return get;
-                        //} else return new Response(response, 304);
+
+                        //} else rreturn new NotModifiedResponse(resource);
 
                     case "POST":
                         try {
@@ -117,18 +116,20 @@ public class ResponseFactory {
                         return new PostResponse(resource);
 
                     case "HEAD":
-                        if (resource.isModifiedURI() == true) {
-                            return new Response(resource, 200);
-                        } else return new Response(resource, 304);
+                        //if (resource.isModifiedURI() == true) {
+                            //TODO: GRADING CHECKLIST - Simple caching (HEAD results in 200 with Last-Modified header)
+                            resource.setLastModified(new Date (file.lastModified()));
+                            return new HeadResponse(resource);
+                        //} else return new NotModifiedResponse(resource);
                     default:
-                        return new Response(resource, 400);
+                        return new BadRequestResponse(resource);
                 }
             } else {
-                return new Response(resource, 404);
+                return new NotFoundResponse(resource);
             }
         }
         //TODO is it 400?
-        return new Response(resource,400);
+        return new BadRequestResponse(resource);
     }
 
 }
