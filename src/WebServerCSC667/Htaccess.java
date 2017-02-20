@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 /**
  * Created by Vivian on 2/3/17.
  */
-public class Htaccess  {
+public class Htaccess extends ConfigurationReader {
 
     private Htpassword userFile;
     private String authType;
@@ -27,8 +27,7 @@ public class Htaccess  {
             e.printStackTrace();
         }
     }
-    //TODO:
-    //implement AuthUserFile
+
     public void parse(String fileContents) {
         String[] tempLineSplit = fileContents.split("\n");
         for (int index = 0; index < tempLineSplit.length; index++) {
@@ -37,7 +36,7 @@ public class Htaccess  {
             switch (temp[0]) {
                 case "AuthUserFile":
                     try {
-                        //TODO: user if hardcoded for now, change back to temp[1] b4 submitting
+                        //TODO: user is hardcoded for now, change back to temp[1] b4 submitting
                         userFile = new Htpassword("public_html/example.htpasswd");
                         //userFile = new Htpassword(temp[1]);
                     } catch (IOException e) {
