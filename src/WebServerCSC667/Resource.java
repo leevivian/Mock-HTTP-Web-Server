@@ -1,5 +1,8 @@
 package WebServerCSC667;
 
+import WebServerCSC667.HttpdConf;
+import WebServerCSC667.MimeTypes;
+
 import java.awt.*;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -7,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,11 +27,18 @@ public class Resource {
     private String contentType;
     private File file;
     private String myPath = "";
+    private Date lastModified;
     private boolean modifiedScriptAliasURI = false;
     private boolean modifiedURI = false;
 
     byte[] body = "".getBytes();
 
+    public Date getLastModified() {
+        return lastModified;
+    }
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
     public void setBody(byte[] body) {
         this.body = body;
     }
@@ -47,7 +58,7 @@ public class Resource {
         return modifiedURI;
     }
 
-    // V
+
     HashMap reqheaders;
 
     public void setHeaders(HashMap headers) {
@@ -133,7 +144,7 @@ public class Resource {
                 return mimeTypes.lookup(mimeExtension[mimeExtension.length - 1]);
             }
         }
-        return null;
+        return "text/text";
     }
     //Check if uri has a scriptAlias
     //Starts @ the end od temp[] index
