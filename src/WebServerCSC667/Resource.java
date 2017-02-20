@@ -83,10 +83,15 @@ public class Resource {
 
         absolutePath = myPath;
 
+
         // TODO: Append DirIndex, do not hardcode index.html
-        if (new File(getAbsolutePath()).isFile() == false){
+        //if (!new File(getAbsolutePath()).isFile()
+
+        if (!myPath.contains(".")){
             absolutePath = absolutePath + "index.html";
         } // else absolutePath is fine just the way it is
+
+        System.out.println("Absolute Path: " + absolutePath);
 
         try {
             // needs encoding otherwise - URISyntaxException: Illegal character in path

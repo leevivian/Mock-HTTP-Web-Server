@@ -78,7 +78,7 @@ public class ResponseFactory {
                     case "GET":
                        // if (resource.isModifiedURI() == true) {
                             try {
-                                resource.setBody(Files.readAllBytes(Paths.get("./public_html/index.html")));
+                                resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
                                 //System.out.println(resource.getBody().)
                             } catch (IOException e) {
                                 e.printStackTrace();
