@@ -35,13 +35,12 @@ public class MimeTypes extends ConfigurationReader{
     }
 
     public String lookup(String extension) {
-        return this.types.get(extension);
+        return types.get(extension);
     }
 
     public static void main(String args[]){
         MimeTypes test = new MimeTypes( "mime.types");
         System.out.println("TEST TYPES: " + test.types);
         System.out.println("EXT TEST" + test.lookup("aiff"));
-
     }
 }

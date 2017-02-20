@@ -3,6 +3,7 @@ package WebServerCSC667;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Base64;
 import java.nio.charset.Charset;
@@ -79,7 +80,7 @@ public class Htpassword extends ConfigurationReader {
             byte[] result = mDigest.digest( password.getBytes() );
 
             return Base64.getEncoder().encodeToString( result );
-        } catch( Exception e ) {
+        } catch( NoSuchAlgorithmException e ) {
             return "";
         }
     }

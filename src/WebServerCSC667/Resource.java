@@ -77,6 +77,7 @@ public class Resource {
             this.myPath = docuRoot + myURIString;
         }
 
+        System.out.println("Content-type: " + contentType);
         System.out.println("docuRoot: " + docuRoot);
         System.out.println("myURIString: " + myURIString);
         System.out.println("myPath: " + this.myPath);
@@ -87,7 +88,7 @@ public class Resource {
         // TODO: Append DirIndex, do not hardcode index.html
         //if (!new File(getAbsolutePath()).isFile()
 
-        if (!myPath.contains(".")){
+        if (!myPath.contains(".") && !isScript()){
             absolutePath = absolutePath + "index.html";
         } // else absolutePath is fine just the way it is
 
@@ -129,7 +130,6 @@ public class Resource {
             String[] mimeExtension = (temp[temp.length - 1]).split("\\.");
 
             if (mimeExtension.length > 1) {
-                System.out.println("CONTENT TYHPE CHECK: " + contentType);
                 return mimeTypes.lookup(mimeExtension[mimeExtension.length - 1]);
             }
         }
