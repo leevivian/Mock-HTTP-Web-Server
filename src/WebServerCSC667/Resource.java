@@ -70,9 +70,6 @@ public class Resource {
         checkContainsScriptAliasKey(uri, myConf);
         checkContainsAliasKey(uri, myConf);
         contentType = setContentType(uri, myMimeType);
-        //System.out.println("PASSED MIME");
-       // System.out.println("OUT OF FOR CONFIG TESTS: "+ this.myPath);
-        //System.out.println("uri: " +  uri);
 
         // ******* RESOLVE PATH *******
         docuRoot = config.getDocumentRoot();
@@ -84,14 +81,12 @@ public class Resource {
         System.out.println("myURIString: " + myURIString);
         System.out.println("myPath: " + this.myPath);
 
-        //System.out.println("ABSOLUTEPATH: " + getAbsolutePath());
-        //TODO: uri == / or null append
-        if (uri == "/" || uri == ""){
-            if (new File(getAbsolutePath()).isFile() == true){
-                this.myPath = ("./public_html/index.html");
-            }
-        }
         absolutePath = myPath;
+
+        // TODO: Append DirIndex, do not hardcode index.html
+        if (new File(getAbsolutePath()).isFile() == false){
+            absolutePath = absolutePath + "index.html";
+        } // else absolutePath is fine just the way it is
 
         try {
             // needs encoding otherwise - URISyntaxException: Illegal character in path
@@ -99,7 +94,6 @@ public class Resource {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
     }
 
     public boolean isScript(){
