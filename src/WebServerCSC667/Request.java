@@ -13,6 +13,8 @@ public class Request {
     private String httpVersion;
     private HashMap headers;
 
+    public boolean flagBR = false;
+
     private String myStr = "";
 
     public Request (String test){
@@ -27,33 +29,41 @@ public class Request {
         }
     }
 
-    public void parse() throws BadRequest{
+    public void parse(){
         boolean contentLength = false;
         String[] arr = (myStr.toString()).split("[\n\r]+");
 
         // HTTP_METHOD IDENTIFIER HTTP_VERSION
         String[] firstLine = arr[0].split("\\s+");
-        verb = firstLine[0];
-        uri = firstLine[1];
-        httpVersion = firstLine[2];
 
-        // test
-        for (int j = 0; j < arr.length; j++) {
-            System.out.println(arr[j]);
-        }
-
-        int index = 1;
-        headers = new HashMap();
-        while (arr[index].contains(": ") && index < arr.length - 1) { // or while != " " ?
-            String[] headersArr = arr[index].split(": ");
-            headers.put(headersArr[0], headersArr[1]);
-            index++;
+        if (!firstLine[0].matches("GET|POST|PUT|DELETE|HEAD")) {
+            System.out.println("1");
         }
 
 
-        // What if content-length is 0?
-        if (headers.containsKey("Content-Length") || headers.containsKey("content-length")) {
-            body = arr[index];
+
+        if (firstLine.length < 3 || !firstLine[0].matches("GET|POST|PUT|DELETE|HEAD")) {
+            flagBR = true;
+        } else {
+
+            verb = firstLine[0];
+            uri = firstLine[1];
+            httpVersion = firstLine[2];
+
+            // TODO: If headers don't exist...
+
+            int index = 1;
+            headers = new HashMap();
+            while (arr[index].contains(": ") && index < arr.length - 1) { // or while != " " ?
+                String[] headersArr = arr[index].split(": ");
+                headers.put(headersArr[0], headersArr[1]);
+                index++;
+            }
+
+            // What if content-length is 0?
+            if (headers.containsKey("Content-Length") || headers.containsKey("content-length")) {
+                body = arr[index];
+            }
         }
 
     }
