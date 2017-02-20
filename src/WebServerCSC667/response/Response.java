@@ -1,9 +1,8 @@
-package WebServerCSC667;
+package WebServerCSC667.response;
+
+import WebServerCSC667.Resource;
 
 import java.io.*;
-import java.net.InetAddress;
-import java.nio.charset.Charset;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -18,15 +17,19 @@ BODY
 status of the response (we’ll look at some of the common status codes
 over the next few slides, all are available on wiki)
 • REASON_PHRASE is the descriptive text corresponding to the status code
-• BODY is the requested resource content (optional, only present if the
+• BODY is the requested response content (optional, only present if the
 Content-Length header is present)
 */
 public class Response {
     int code; // status code
-    String reasonPhrase = "";
+    protected String reasonPhrase = "";
     Resource resource;
     String httpVersion = "1.1";
-    String responseString = "";
+
+    public void setSendBody(boolean sendBody) {
+        this.sendBody = sendBody;
+    }
+    private boolean sendBody;
 
 
 /*
@@ -38,18 +41,26 @@ Connection: Closed
 Content-Type: text/html; charset=iso-8859-1
  */
 
+    public Response (){
+    }
+
     public Response (Resource resource, int code) {
         this.resource = resource;
         this.code = code;
-        //
-        reasonPhrase = getReasonPhrase(code);
-        responseString = "HTTP/" + httpVersion + " " + code + " " + reasonPhrase +
-                "\nDate: " + new Date() +
-                "\nServer: CSC 667 Sailor Scouts" + //name?
-                "\nContent-Length: " +  resource.getBody().length +//size of file
+    }
+
+    public String getInitialHeader(){
+        return ("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
+    }
+    public String getDefaultHeader(){
+        return ("Date: " + new Date() +
+                "\nServer: CSC 667 Sailor Scouts" +
+                "\nContent-Type: " + resource.getContentType());
+    }
+    public String getResponse(){
+        return ("Content-Length: " +  resource.getBody().length +
                 "\nConnection: " + //keep-alive?
-                "\nContent-Type: " + resource.getContentType() +
-                "\n\n" + new String(resource.getBody());  //value of mimetype key
+                "\n\n" + new String(resource.getBody()));
     }
 
     public String getReasonPhrase(int code){
@@ -80,8 +91,13 @@ Content-Type: text/html; charset=iso-8859-1
 
     public void send(OutputStream out){
         PrintStream ps = new PrintStream(out);
-        ps.println(responseString);
-        /*
+
+        ps.println(getInitialHeader());
+        ps.println(getDefaultHeader());
+        if (sendBody == true) {
+            ps.println(getResponse());
+        }
+/*
         ps.println("HTTP/" + httpVersion + " " +code + " " + reasonPhrase);
         ps.println("Date: " + new Date() + "");
         ps.println("Server: " + "Hey there I'm the Server" + "");
