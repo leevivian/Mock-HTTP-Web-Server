@@ -61,6 +61,10 @@ public class Htaccess  {
         }
     }
     public boolean isAuthorized(String username, String password) {
+
+        if (userFile.isAuthorized(new String (username + ":" + password)) == true){
+            return true;
+        }
         return false;
     }
     //for Tests
