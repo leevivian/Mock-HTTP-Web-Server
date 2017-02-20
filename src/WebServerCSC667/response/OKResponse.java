@@ -10,7 +10,7 @@ public class OKResponse extends Response {
     public OKResponse(Resource resource){
         super(resource, 200);
         reasonPhrase = "OK";
-        setSendBody(false);
+        setSendBody(true);
     }
 
 }
