@@ -8,6 +8,7 @@ public class ScriptResponse extends Response {
 
     String currentLine;
     String responseBody = "";
+    String contentType = null;
 
     public ScriptResponse (Resource resource, int code) throws IOException{
         super(resource, code);
@@ -19,14 +20,13 @@ public class ScriptResponse extends Response {
 
         BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
+        contentType = inStreamReader.readLine();
+
         while((currentLine = inStreamReader.readLine()) != null){
-            System.out.println(inStreamReader.readLine());
+            //System.out.println(inStreamReader.readLine());
 
             responseBody += currentLine + "\n";
 
-            if (currentLine.isEmpty()) {
-                break;
-            }
         }
     }
 
@@ -44,7 +44,7 @@ public class ScriptResponse extends Response {
         ps.println("Date: " + new Date());
         ps.println("Server: CSC 667 Sailor Scouts");
         ps.println("Content-Length: " + responseBody.length());
-        ps.println("Content-Type: " +  resource.getContentType());
+        ps.println(contentType);
         ps.println();
         ps.println(responseBody);
 
