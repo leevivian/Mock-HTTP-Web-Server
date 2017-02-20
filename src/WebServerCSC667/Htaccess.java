@@ -36,7 +36,13 @@ public class Htaccess  {
             //System.out.println(temp[0]);
             switch (temp[0]) {
                 case "AuthUserFile":
-                    //userFile = temp[1];
+                    try {
+                        //TODO: user if hardcoded for now, change back to temp[1] b4 submitting
+                        userFile = new Htpassword("public_html/example.htpasswd");
+                        //userFile = new Htpassword(temp[1]);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case "AuthType":
                     authType = temp [1];
