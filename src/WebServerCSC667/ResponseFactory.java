@@ -1,5 +1,7 @@
 package WebServerCSC667;
 
+import WebServerCSC667.response.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,12 +13,29 @@ public class ResponseFactory {
     public static Response getResponse(Request request, Resource resource) {
         //TODO: implment error 500 - this should be a wrapper around Worker
         //TODO: Access checks
-        if (resource.isProtected() == true){
+        /*
+        if (response.isProtected() == true){
             //401 and 403 erros here
+            //TODO: loop file path for all subdirectorys for .htaaccess file
+            String[] parse = response.getAbsolutePath().split("/");
+            for (int index = 0; index < parse.length; index++){
+                if (response.isProtected()){
+                  Htaccess hta = new Htaccess();
+                  //TODO: need request auth headers
+                    if(request.getaccessHeaders.exists == false){
+                        return new Response(response, 401);
+                    }
+                    //form username, password
+                  if(hta.isAuthorized(username, password) == false){
+                      return new Response(response, 403);
+                  }
+                }
+            }
             //if auth header -> auth
         }
+        */
         //start response
-        //else if (resource.isProtected() == false || (resource.isProtected() && //is VALID PW))
+        //else if (response.isProtected() == false || (response.isProtected() && //is VALID PW))
 
         // TODO: This if statement is always true because .equals() should be used to compare strings
         // Not sure why it's needed here?
@@ -44,7 +63,7 @@ public class ResponseFactory {
                         if (resource.getContentType() == null){
                             new File(resource.getAbsolutePath()).mkdirs();
                             System.out.println("MAKE NEW DIR");
-                            return new Response(resource, 201);
+                            return new PutResponse(resource);
 
                         }
                         //if file already exists
@@ -54,15 +73,15 @@ public class ResponseFactory {
                         }
                         //do put
                         else {
-                            byte data[] = request.getBody().getBytes();
+                            resource.setBody(request.getBody().getBytes());
                             Path filePUT = Paths.get(resource.getAbsolutePath());
                             try {
-                                Files.write(filePUT, data);
+                                Files.write(filePUT, resource.getBody());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             //Files.write(file, data, StandardOpenOption.APPEND);
-                            return new Response(resource, 201);
+                            return new PutResponse(resource);
                         }
 
                     case "DELETE":
@@ -76,15 +95,18 @@ public class ResponseFactory {
 
                         //TODO:
                     case "GET":
-                       // if (resource.isModifiedURI() == true) {
+                       // if (response.isModifiedURI() == true) {
                             try {
                                 resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
-                                //System.out.println(resource.getBody().)
+                                //System.out.println(response.getBody().)
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            return new Response(resource, 200);
-                        //} else return new Response(resource, 304);
+                           return new OKResponse(resource);
+                            //Response get =  new Response(response, 200);
+                            //get.setSendBody(true);
+                            //return get;
+                        //} else return new Response(response, 304);
 
                     case "POST":
                         try {
@@ -92,7 +114,7 @@ public class ResponseFactory {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        return new Response(resource, 200);
+                        return new PostResponse(resource);
 
                     case "HEAD":
                         if (resource.isModifiedURI() == true) {
