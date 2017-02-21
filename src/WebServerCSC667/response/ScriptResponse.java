@@ -31,8 +31,11 @@ public class ScriptResponse extends Response {
             responseBody += currentLine + "\n";
 
         }
+
+        resource.setBody(responseBody.getBytes());
     }
 
+    // TODO: Make this a different format
     public void setEnvironment(Map<String, String> environment) {
         resource.getHeaders().forEach((key, value) -> {
             environment.put("HTTP_" + key.toString().toUpperCase(), value.toString().toUpperCase());

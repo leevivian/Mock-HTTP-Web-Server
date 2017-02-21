@@ -45,7 +45,8 @@ public class Logger {
                   writer.println("-");
              }
 
-            writer.close();
+             writer.println();
+             writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
