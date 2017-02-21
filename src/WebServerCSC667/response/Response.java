@@ -21,7 +21,7 @@ over the next few slides, all are available on wiki)
 Content-Length header is present)
 */
 public class Response {
-    int code; // status code
+    public int code; // status code
     protected String reasonPhrase = "";
     Resource resource;
     String httpVersion = "1.1";
@@ -63,6 +63,10 @@ Content-Type: text/html; charset=iso-8859-1
                 "\n\n" + new String(resource.getBody()));
     }
 
+    public Integer getContentLength(){
+        return resource.getBody().length;
+    }
+
     public String getReasonPhrase(int code){
         switch(code) {
             case 200:
@@ -92,17 +96,25 @@ Content-Type: text/html; charset=iso-8859-1
     public void send(OutputStream out){
         PrintStream ps = new PrintStream(out);
 
+        // TODO: Vivian's Postman doesn't like the commented out Response...
+/*
         ps.println(getInitialHeader());
         ps.println(getDefaultHeader());
         if (sendBody == true) {
             ps.println(getResponse());
         }
-/*
-        ps.println("HTTP/" + httpVersion + " " +code + " " + reasonPhrase);
-        ps.println("Date: " + new Date() + "");
-        ps.println("Server: " + "Hey there I'm the Server" + "");
-        ps.println("Content-Type: " + "Hey there I'm the content type" + "\n");
-*/
+        */
+
+        ps.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
+        ps.println("Date: " + new Date());
+        ps.println("Server: CSC 667 Sailor Scouts");
+        ps.println("Content-Type: " + resource.getContentType());
+        ps.println("Content-Length: " +  resource.getBody().length);
+        ps.println("Connection: ");
+        ps.println();
+        if (sendBody) {
+            ps.println(new String(resource.getBody()));
+        }
 
         ps.flush();
         ps.close();

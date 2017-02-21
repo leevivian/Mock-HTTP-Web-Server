@@ -8,9 +8,6 @@ import java.util.Date;
 
 public class BadRequest extends RuntimeException{
 
-    String statusCode;
-    String description;
-
     public BadRequest(Socket socket) {
         super();
         try {

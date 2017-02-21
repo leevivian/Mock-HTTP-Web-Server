@@ -43,9 +43,7 @@ public class ResponseFactory {
         if (request.getVerb() != "PUT") {
             //if file doesn't exist
             if (new File(resource.getAbsolutePath()).isFile() == true && (resource.isScript() == true)) {
-                //check if script alias
 
-                // TODO: Remove try catch, BR was for testing
                 if (resource.isModifiedScriptAliasURI()) {
                     try {
                         resource.setHeaders(request.getHeaders());
@@ -112,6 +110,7 @@ public class ResponseFactory {
                             resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
                         } catch (IOException e) {
                             e.printStackTrace();
+                            // TODO: Return bad response for failure to find file or smth
                         }
                         return new PostResponse(resource);
 

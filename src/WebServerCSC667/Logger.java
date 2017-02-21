@@ -1,23 +1,20 @@
 package WebServerCSC667;
 
+import WebServerCSC667.response.*;
+
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by rain2 on 2/3/2017.
- */
 public class Logger {
-    File file;
+    File filePath;
 
     public Logger (String fileName){
-        // Creates a new File instance by converting the given pathname string into an abstract pathname.
-        file = new File(fileName);
+        filePath = new File(fileName);
     }
 
     // Return type?
@@ -25,7 +22,7 @@ public class Logger {
 
         // Common log format from https://httpd.apache.org/docs/1.3/logs.html
         try {
-            PrintWriter writer = new PrintWriter(file, "UTF8");
+            PrintWriter writer = new PrintWriter(new FileOutputStream(filePath, true));
             // IP address of the client
 
             // Username, if password protected
@@ -39,46 +36,20 @@ public class Logger {
             writer.println(request.getVerb() + " " + request.getURI() + " " + request.getHttpVersion());
 
             // Status Code
-            // maybe use getCode instead?
-            // writer.println(response.code);
+            writer.println(response.code);
 
             // Size of response, not including response headers
-            // if (response's content-length > 0) {
-            //      writer.println(reponse.getContentLength());
-            // } else {
-            //      writer.println("-");
-            // }
+            if (response.getContentLength() > 0) {
+                  writer.println(response.getContentLength());
+             } else {
+                  writer.println("-");
+             }
 
             writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main (String args[]) {
-        Logger log = new Logger ("conf/log.txt");
-        Request myReq = new Request("POST / HTTP/1.1\n" +
-                                    "cache-control: no-cache\n" +
-                                    "Postman-Token: 69936131-e3f1-4e70-9a2f-dbb51d33c814\n" +
-                                    "User-Agent: PostmanRuntime/3.0.9\n" +
-                                    "Accept: */*\n" +
-                                    "Host: localhost:8096\n" +
-                                    "accept-encoding: gzip, deflate\n" +
-                                    "content-length: 0\n" +
-                                    "Connection: keep-alive");
-
-        HttpdConf config = new HttpdConf("httpd.conf");
-        MimeTypes myMime = new MimeTypes( "mime.types");
-
-        try {
-            Resource res = new Resource(myReq.getURI(), config, myMime);
-            Response response = ResponseFactory.getResponse(myReq, res);
-            log.write(myReq, response);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
     }
 
 }
