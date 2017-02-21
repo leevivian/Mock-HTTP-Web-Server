@@ -11,10 +11,19 @@ public class HttpdConf extends ConfigurationReader{
     private String documentRoot = "";
     private String serverRoot = "";
     private String logFileLocaction = "";
+    private String accessFileName = "";
+    //TODO:Correct index file used (defaults to index.html)??
+    private String directoryIndex = "index.html";
     private int port = 8080;
 
     public int getPort() {
         return port;
+    }
+    public String getDirectoryIndex() {
+        return directoryIndex;
+    }
+    public String getAccessFileName() {
+        return accessFileName;
     }
     public String getServerRoot() {
         return serverRoot;
@@ -73,6 +82,10 @@ public class HttpdConf extends ConfigurationReader{
                 case "ServerRoot":
                     serverRoot = temp[1];
                     break;
+                case "AccessFileName":
+                    accessFileName = temp[1];
+                case"DirectoryIndex":
+                    directoryIndex = temp[1];
                 default:
                     httpdConfig.put(temp[0], temp[1]);
                     break;

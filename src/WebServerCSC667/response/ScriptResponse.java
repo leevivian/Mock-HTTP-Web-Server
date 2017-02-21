@@ -1,4 +1,7 @@
-package WebServerCSC667;
+package WebServerCSC667.response;
+
+import WebServerCSC667.Resource;
+import WebServerCSC667.response.Response;
 
 import java.io.*;
 import java.util.Map;

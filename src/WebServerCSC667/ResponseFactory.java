@@ -1,22 +1,42 @@
 package WebServerCSC667;
 
+import WebServerCSC667.response.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 
 public class ResponseFactory {
 
     public static Response getResponse(Request request, Resource resource) {
         //TODO: implment error 500 - this should be a wrapper around Worker
         //TODO: Access checks
-        if (resource.isProtected() == true){
+        /*
+        if (response.isProtected() == true){
             //401 and 403 erros here
+            //TODO: loop file path for all subdirectorys for .htaaccess file
+            String[] parse = response.getAbsolutePath().split("/");
+            for (int index = 0; index < parse.length; index++){
+                if (response.isProtected()){
+                  Htaccess hta = new Htaccess();
+                  //TODO: need request auth headers
+                    if(request.getaccessHeaders.exists == false){
+                        return new UnauthorizedResponse(response);
+                    }
+                    //form username, password
+                  if(hta.isAuthorized(username, password) == false){
+                      return new ForbiddenResponse(response);
+                  }
+                }
+            }
             //if auth header -> auth
         }
+        */
         //start response
-        //else if (resource.isProtected() == false || (resource.isProtected() && //is VALID PW))
+        //else if (response.isProtected() == false || (response.isProtected() && //is VALID PW))
 
         // TODO: This if statement is always true because .equals() should be used to compare strings
         // Not sure why it's needed here?
@@ -44,47 +64,48 @@ public class ResponseFactory {
                         if (resource.getContentType() == null){
                             new File(resource.getAbsolutePath()).mkdirs();
                             System.out.println("MAKE NEW DIR");
-                            return new Response(resource, 201);
+                            return new PutResponse(resource);
 
                         }
                         //if file already exists
                         if (file.isFile() == true) {
-                            return new Response(resource, 400);
+                            return new NotFoundResponse(resource);
 
                         }
                         //do put
                         else {
-                            byte data[] = request.getBody().getBytes();
+                            resource.setBody(request.getBody().getBytes());
                             Path filePUT = Paths.get(resource.getAbsolutePath());
                             try {
-                                Files.write(filePUT, data);
+                                Files.write(filePUT, resource.getBody());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             //Files.write(file, data, StandardOpenOption.APPEND);
-                            return new Response(resource, 201);
+                            return new PutResponse(resource);
                         }
 
                     case "DELETE":
                         if (file.isFile() == true) {
                             file.delete();
-                            return new Response(resource, 204);
+                            return new DeleteResponse(resource);
                         } else {
                             System.out.println("File Doesn't exist");
-                            return new Response(resource, 400);
+                            return new BadRequestResponse(resource);
                         }
 
                         //TODO:
                     case "GET":
-                       // if (resource.isModifiedURI() == true) {
+                       // if (response.isModifiedURI() == true) {
                             try {
                                 resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
-                                //System.out.println(resource.getBody().)
+                                //System.out.println(response.getBody().)
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            return new Response(resource, 200);
-                        //} else return new Response(resource, 304);
+                           return new OKResponse(resource);
+
+                        //} else rreturn new NotModifiedResponse(resource);
 
                     case "POST":
                         try {
@@ -92,21 +113,23 @@ public class ResponseFactory {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        return new Response(resource, 200);
+                        return new PostResponse(resource);
 
                     case "HEAD":
-                        if (resource.isModifiedURI() == true) {
-                            return new Response(resource, 200);
-                        } else return new Response(resource, 304);
+                        //if (resource.isModifiedURI() == true) {
+                            //TODO: GRADING CHECKLIST - Simple caching (HEAD results in 200 with Last-Modified header)
+                            resource.setLastModified(new Date (file.lastModified()));
+                            return new HeadResponse(resource);
+                        //} else return new NotModifiedResponse(resource);
                     default:
-                        return new Response(resource, 400);
+                        return new BadRequestResponse(resource);
                 }
             } else {
-                return new Response(resource, 404);
+                return new NotFoundResponse(resource);
             }
         }
         //TODO is it 400?
-        return new Response(resource,400);
+        return new BadRequestResponse(resource);
     }
 
 }
