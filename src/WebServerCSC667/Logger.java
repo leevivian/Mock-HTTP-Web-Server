@@ -25,7 +25,7 @@ public class Logger {
         try {
             PrintWriter writer = new PrintWriter(new FileOutputStream(filePath, true));
 
-            writer.print(request.getIPAddress());
+            writer.print(request.getIPAddress() + " ");
 
             // Username, if password protected
 
@@ -39,7 +39,7 @@ public class Logger {
                            request.getHttpVersion() + "\" ");
 
             // Status Code
-            writer.print(response.code);
+            writer.print(response.code + " ");
 
             // Size of response, not including response headers
             if (response.getContentLength() > 0) {
