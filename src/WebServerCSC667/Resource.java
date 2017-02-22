@@ -25,6 +25,7 @@ public class Resource {
     private boolean modifiedURI = false;
     private HashMap reqheaders;
     byte[] body = "".getBytes();
+    String htacessLocation = "";
 
     public void setHeaders(HashMap headers) {
         reqheaders = headers;
@@ -79,15 +80,21 @@ public class Resource {
         return false;
     }
 
-    // If a path is protected, authentification process should occur
     public boolean isProtected(){
 
         String[] parseAbsolutePath = absolutePath.split("/");
         for (int index = 0; index < parseAbsolutePath.length; index++){
-            if (new File(parseAbsolutePath[index] + "/.htaccess").exists());
-            return true;
+            htacessLocation += parseAbsolutePath[index] + "/";
+            System.out.println(htacessLocation);
+            if (new File(htacessLocation + "/.htaccess").exists()) {
+                return true;
+            }
         }
         return false;
+    }
+
+    public String getHtaccessLocation() {
+        return htacessLocation + "/.htaccess";
     }
 
     public String setContentType(String uri, MimeTypes mimeTypes){
