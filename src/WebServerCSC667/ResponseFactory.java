@@ -14,27 +14,31 @@ public class ResponseFactory {
     public static Response getResponse(Request request, Resource resource) {
         //TODO: implment error 500 - this should be a wrapper around Worker
         //TODO: Access checks
-        /*
-        if (response.isProtected() == true){
+
+        if (resource.isProtected() == true){
             //401 and 403 erros here
             //TODO: loop file path for all subdirectorys for .htaaccess file
-            String[] parse = response.getAbsolutePath().split("/");
+            String[] parse = resource.getAbsolutePath().split("/");
             for (int index = 0; index < parse.length; index++){
-                if (response.isProtected()){
+                if (resource.isProtected()){
                   Htaccess hta = new Htaccess();
                   //TODO: need request auth headers
-                    if(request.getaccessHeaders.exists == false){
-                        return new UnauthorizedResponse(response);
+                    if(request.getAuthHeader() != null){
+                        return new UnauthorizedResponse(resource);
                     }
+
+                  /*
                     //form username, password
                   if(hta.isAuthorized(username, password) == false){
-                      return new ForbiddenResponse(response);
+                      return new ForbiddenResponse(resource);
                   }
+                  
+                  */
                 }
             }
             //if auth header -> auth
         }
-        */
+
         //start response
         //else if (response.isProtected() == false || (response.isProtected() && //is VALID PW))
 

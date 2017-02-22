@@ -88,6 +88,14 @@ public class Request {
         return body;
    }
 
+    public String getAuthHeader() {
+        if (headers.containsKey("Authorization")) {
+            return headers.get("Authorization").toString();
+        } else {
+            return null;
+        }
+    }
+
     public void printMe() {
         // For testing purposes
         System.out.println("-----THIS IS A TEST from the Request class-----");
