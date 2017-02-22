@@ -137,8 +137,6 @@ public class ResponseFactory {
             default:
                 return new BadRequestResponse(resource);
         }
-        //TODO is it 400?
-        //return new BadRequestResponse(resource);
     } // end getResponse
 
 }

@@ -12,6 +12,7 @@ import java.util.Date;
 
 public class Logger {
     File filePath;
+    String ipAddress = "-";
 
     public Logger (String fileName){
         filePath = new File(fileName);
@@ -21,28 +22,36 @@ public class Logger {
     public void write (Request request, Response response){
 
         // Common log format from https://httpd.apache.org/docs/1.3/logs.html
+        // 127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326
         try {
             PrintWriter writer = new PrintWriter(new FileOutputStream(filePath, true));
+
             // IP address of the client
+            if (request.getHeaders().containsKey("X-FORWARDED-FOR")) {
+                ipAddress = request.getHeaders().get("X-FORWARDED-FOR").toString();
+            }
+
+            writer.print(ipAddress + " ");
 
             // Username, if password protected
 
             // The time the server finished processing the request
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss z");
             Date date = new Date();
-            writer.println(dateFormat.format(date));
+            writer.print("[" + dateFormat.format(date) + "]" + " ");
 
             // HTTP_Method Identifier HTTP_Version
-            writer.println(request.getVerb() + " " + request.getURI() + " " + request.getHttpVersion());
+            writer.print("\"" + request.getVerb() + " " + request.getURI() + " " +
+                           request.getHttpVersion() + "\" ");
 
             // Status Code
-            writer.println(response.code);
+            writer.print(response.code);
 
             // Size of response, not including response headers
             if (response.getContentLength() > 0) {
-                  writer.println(response.getContentLength());
+                  writer.print(response.getContentLength());
              } else {
-                  writer.println("-");
+                  writer.print("-");
              }
 
              writer.println();
