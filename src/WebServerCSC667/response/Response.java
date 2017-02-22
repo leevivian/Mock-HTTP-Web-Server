@@ -112,8 +112,14 @@ Content-Type: text/html; charset=iso-8859-1
         ps.println("Content-Length: " +  resource.getBody().length);
         ps.println("Connection: ");
         ps.println();
-        if (sendBody) {
+        if (sendBody && !resource.getContentType().contains("image")) {
             ps.println(new String(resource.getBody()));
+        } else if (sendBody && resource.getContentType().contains("image")) {
+            try {
+                out.write(resource.getBody());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         ps.flush();
