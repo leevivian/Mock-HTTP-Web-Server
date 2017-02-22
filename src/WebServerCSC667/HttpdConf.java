@@ -56,39 +56,41 @@ public class HttpdConf extends ConfigurationReader{
 
     public void parse(){
         String[] temp;
-        while(hasMoreLines() == true){
+        while(hasMoreLines()){
             temp = nextLine().split(" ");
-            temp[1] = temp[1].replaceAll("\"", "");
-            //System.out.println(temp[1]);
-            //System.out.println(temp[0]);
-            switch (temp[0]) {
-                case "DocumentRoot":
-                    documentRoot = temp[1];
-                    break;
-                case "Alias":
-                    temp[2] = temp[2].replaceAll("\"", "");
-                    aliases.put(temp[1],temp[2]);
-                    break;
-                case "ScriptAlias":
-                    temp[2] = temp[2].replaceAll("\"", "");
-                    scriptAliases.put(temp[1],temp[2]);
-                    break;
-                case "Listen":
-                    port = Integer.parseInt(temp[1]);
-                    break;
-                case "LogFile":
-                    logFileLocaction = temp[1];
-                    break;
-                case "ServerRoot":
-                    serverRoot = temp[1];
-                    break;
-                case "AccessFileName":
-                    accessFileName = temp[1];
-                case"DirectoryIndex":
-                    directoryIndex = temp[1];
-                default:
-                    httpdConfig.put(temp[0], temp[1]);
-                    break;
+            if (temp.length > 1) {
+                temp[1] = temp[1].replaceAll("\"", "");
+                //System.out.println(temp[1]);
+                //System.out.println(temp[0]);
+                switch (temp[0]) {
+                    case "DocumentRoot":
+                        documentRoot = temp[1];
+                        break;
+                    case "Alias":
+                        temp[2] = temp[2].replaceAll("\"", "");
+                        aliases.put(temp[1], temp[2]);
+                        break;
+                    case "ScriptAlias":
+                        temp[2] = temp[2].replaceAll("\"", "");
+                        scriptAliases.put(temp[1], temp[2]);
+                        break;
+                    case "Listen":
+                        port = Integer.parseInt(temp[1]);
+                        break;
+                    case "LogFile":
+                        logFileLocaction = temp[1];
+                        break;
+                    case "ServerRoot":
+                        serverRoot = temp[1];
+                        break;
+                    case "AccessFileName":
+                        accessFileName = temp[1];
+                    case "DirectoryIndex":
+                        directoryIndex = temp[1];
+                    default:
+                        httpdConfig.put(temp[0], temp[1]);
+                        break;
+                }
             }
         }
     }
