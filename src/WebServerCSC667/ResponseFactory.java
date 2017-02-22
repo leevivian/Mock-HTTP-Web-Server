@@ -22,17 +22,27 @@ public class ResponseFactory {
             for (int index = 0; index < parse.length; index++){
                 if (resource.isProtected()){
                   Htaccess hta = new Htaccess();
-                  //TODO: need request auth headers
-                    if(request.getAuthHeader() != null){
-                        return new UnauthorizedResponse(resource);
-                    }
+
+                  try {
+                      Htpassword htp = new Htpassword("public_html/example.htpasswd");
+                      //TODO: need request auth headers
+                      if(request.getAuthHeader() == null){
+                          return new UnauthorizedResponse(resource);
+                      } else {
+                          if (htp.isAuthorized(request.getAuthHeader()) == false) {
+                              return new ForbiddenResponse(resource);
+                          }
+                      }
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
 
                   /*
                     //form username, password
                   if(hta.isAuthorized(username, password) == false){
                       return new ForbiddenResponse(resource);
                   }
-                  
+
                   */
                 }
             }
@@ -42,9 +52,7 @@ public class ResponseFactory {
         //start response
         //else if (response.isProtected() == false || (response.isProtected() && //is VALID PW))
 
-        // TODO: This if statement is always true because .equals() should be used to compare strings
-        // Not sure why it's needed here?
-        if (request.getVerb() != "PUT") {
+        if (!request.getVerb().equals("PUT")) {
             //if file doesn't exist
             if (new File(resource.getAbsolutePath()).isFile() == true && (resource.isScript() == true)) {
 
