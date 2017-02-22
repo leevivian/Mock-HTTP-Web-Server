@@ -65,84 +65,81 @@ public class ResponseFactory {
                         e.printStackTrace();
                     }
                 }
-
-            } else if (resource.isScript() == false) {
-                //File file = new File(resource.getAbsolutePath());
-
-                switch (request.getVerb()) {
-                    //TODO: make dir if content type = null
-                    case "PUT":
-                        if (resource.getContentType() == null){
-                            new File(resource.getAbsolutePath()).mkdirs();
-                            System.out.println("MAKE NEW DIR");
-                            return new PutResponse(resource);
-
-                        }
-                        //if file already exists
-                        if (resourceFile.isFile() == true) {
-                            return new NotFoundResponse(resource);
-
-                        }
-                        //do put
-                        else {
-                            resource.setBody(request.getBody().getBytes());
-                            Path filePUT = Paths.get(resource.getAbsolutePath());
-                            try {
-                                Files.write(filePUT, resource.getBody());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            //Files.write(file, data, StandardOpenOption.APPEND);
-                            return new PutResponse(resource);
-                        }
-
-                    case "DELETE":
-                        if (resourceFile.isFile() == true) {
-                            resourceFile.delete();
-                            return new DeleteResponse(resource);
-                        } else {
-                            System.out.println("File Doesn't exist");
-                            return new BadRequestResponse(resource);
-                        }
-
-                        //TODO:
-                    case "GET":
-                       // if (response.isModifiedURI() == true) {
-                            try {
-                                resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
-                                //System.out.println(response.getBody().)
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                           return new OKResponse(resource);
-
-                        //} else rreturn new NotModifiedResponse(resource);
-
-                    case "POST":
-                        try {
-                            resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            // TODO: Return bad response for failure to find file or smth
-                        }
-                        return new PostResponse(resource);
-
-                    case "HEAD":
-                        //if (resource.isModifiedURI() == true) {
-                            //TODO: GRADING CHECKLIST - Simple caching (HEAD results in 200 with Last-Modified header)
-                            resource.setLastModified(new Date (resourceFile.lastModified()));
-                            return new HeadResponse(resource);
-                        //} else return new NotModifiedResponse(resource);
-                    default:
-                        return new BadRequestResponse(resource);
-                }
-            } else {
+            } else if (!resourceFile.isFile() && !resource.isScript()) {
                 return new NotFoundResponse(resource);
             }
         }
+
+        switch (request.getVerb()) {
+            //TODO: make dir if content type = null
+            case "PUT":
+                if (resource.getContentType() == null){
+                    new File(resource.getAbsolutePath()).mkdirs();
+                    System.out.println("MAKE NEW DIR");
+                    return new PutResponse(resource);
+
+                }
+                //if file already exists
+                if (resourceFile.isFile() == true) {
+                    return new NotFoundResponse(resource);
+
+                }
+                //do put
+                else {
+                    resource.setBody(request.getBody().getBytes());
+                    Path filePUT = Paths.get(resource.getAbsolutePath());
+                    try {
+                        Files.write(filePUT, resource.getBody());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //Files.write(file, data, StandardOpenOption.APPEND);
+                    return new PutResponse(resource);
+                }
+
+            case "DELETE":
+                if (resourceFile.isFile() == true) {
+                    resourceFile.delete();
+                    return new DeleteResponse(resource);
+                } else {
+                    System.out.println("File Doesn't exist");
+                    return new BadRequestResponse(resource);
+                }
+
+                //TODO:
+            case "GET":
+                // if (response.isModifiedURI() == true) {
+                try {
+                    resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
+                    //System.out.println(response.getBody().)
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return new OKResponse(resource);
+
+            //} else rreturn new NotModifiedResponse(resource);
+
+            case "POST":
+                try {
+                    resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // TODO: Return bad response for failure to find file or smth
+                }
+                return new PostResponse(resource);
+
+            case "HEAD":
+                //if (resource.isModifiedURI() == true) {
+                //TODO: GRADING CHECKLIST - Simple caching (HEAD results in 200 with Last-Modified header)
+                resource.setLastModified(new Date (resourceFile.lastModified()));
+                return new HeadResponse(resource);
+            //} else return new NotModifiedResponse(resource);
+            default:
+                return new BadRequestResponse(resource);
+        }
         //TODO is it 400?
-        return new BadRequestResponse(resource);
-    }
+        //return new BadRequestResponse(resource);
+    } // end getResponse
 
 }
 
