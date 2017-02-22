@@ -14,13 +14,13 @@ public class Htaccess extends ConfigurationReader {
     private String authName;
     private String require;
 
-    public Htaccess() {
-        this.load();
+    public Htaccess(String htaccessLocation) {
+        this.load(htaccessLocation);
     }
 
-    public void load() {
+    public void load(String htaccessLocation) {
         try {
-            String fileContents = new String(Files.readAllBytes(Paths.get("public_html/.htaccess")));
+            String fileContents = new String(Files.readAllBytes(Paths.get(htaccessLocation)));
             parse(fileContents);
         } catch (IOException e) {
             System.out.println("failed to read file");
@@ -76,10 +76,11 @@ public class Htaccess extends ConfigurationReader {
                 ", require='" + require + '\'' +
                 '}';
     }
-
+/*
     public static void main (String[] args) {
         System.out.println("TESTSTST");
         Htaccess test = new Htaccess();
         System.out.println(test.toString());
     }
+    */
 }
