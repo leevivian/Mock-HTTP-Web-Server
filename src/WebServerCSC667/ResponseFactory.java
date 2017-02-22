@@ -29,7 +29,9 @@ public class ResponseFactory {
                       if(request.getAuthHeader() == null){
                           return new UnauthorizedResponse(resource);
                       } else {
-                          if (htp.isAuthorized(request.getAuthHeader()) == false) {
+                          String parseAuthorizationHeader[] = request.getAuthHeader().split("\\s+");
+                          String encodedCredentials = parseAuthorizationHeader[1];
+                          if (htp.isAuthorized(encodedCredentials) == false) {
                               return new ForbiddenResponse(resource);
                           }
                       }
