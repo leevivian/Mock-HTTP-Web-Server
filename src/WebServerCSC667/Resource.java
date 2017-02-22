@@ -81,8 +81,10 @@ public class Resource {
 
     // If a path is protected, authentification process should occur
     public boolean isProtected(){
-        if (new File(myPath+ "/.htaccess").exists() == true) {
-            //System.out.println("ITS PROTECTED");
+
+        String[] parseAbsolutePath = absolutePath.split("/");
+        for (int index = 0; index < parseAbsolutePath.length; index++){
+            if (new File(parseAbsolutePath[index] + "/.htaccess").exists());
             return true;
         }
         return false;

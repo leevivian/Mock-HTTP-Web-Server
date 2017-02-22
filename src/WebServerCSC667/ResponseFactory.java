@@ -12,32 +12,32 @@ import java.util.Date;
 public class ResponseFactory {
 
     public static Response getResponse(Request request, Resource resource) {
+
+        File resourceFile = new File(resource.getAbsolutePath());
+
         //TODO: implment error 500 - this should be a wrapper around Worker
         //TODO: Access checks
 
         if (resource.isProtected() == true){
             //401 and 403 erros here
-            //TODO: loop file path for all subdirectorys for .htaaccess file
-            String[] parse = resource.getAbsolutePath().split("/");
-            for (int index = 0; index < parse.length; index++){
-                if (resource.isProtected()){
-                  Htaccess hta = new Htaccess();
+            Htaccess hta = new Htaccess();
+            try {
 
-                  try {
-                      Htpassword htp = new Htpassword("public_html/example.htpasswd");
-                      //TODO: need request auth headers
-                      if(request.getAuthHeader() == null){
-                          return new UnauthorizedResponse(resource);
-                      } else {
-                          String parseAuthorizationHeader[] = request.getAuthHeader().split("\\s+");
-                          String encodedCredentials = parseAuthorizationHeader[1];
-                          if (htp.isAuthorized(encodedCredentials) == false) {
-                              return new ForbiddenResponse(resource);
-                          }
-                      }
-                  } catch (IOException e) {
-                      e.printStackTrace();
-                  }
+                // TODO: How to get the location of htpassword
+                Htpassword htp = new Htpassword("public_html/example.htpasswd");
+                if(request.getAuthHeader() == null){
+                    return new UnauthorizedResponse(resource);
+                } else {
+                    // Example: Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
+                    String parseAuthorizationHeader[] = request.getAuthHeader().split("\\s+");
+                    String encodedCredentials = parseAuthorizationHeader[1];
+                    if (htp.isAuthorized(encodedCredentials) == false) {
+                        return new ForbiddenResponse(resource);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
                   /*
                     //form username, password
@@ -46,8 +46,7 @@ public class ResponseFactory {
                   }
 
                   */
-                }
-            }
+
             //if auth header -> auth
         }
 
@@ -56,7 +55,7 @@ public class ResponseFactory {
 
         if (!request.getVerb().equals("PUT")) {
             //if file doesn't exist
-            if (new File(resource.getAbsolutePath()).isFile() == true && (resource.isScript() == true)) {
+            if (resourceFile.isFile() == true && (resource.isScript() == true)) {
 
                 if (resource.isModifiedScriptAliasURI()) {
                     try {
@@ -68,7 +67,7 @@ public class ResponseFactory {
                 }
 
             } else if (resource.isScript() == false) {
-                File file = new File(resource.getAbsolutePath());
+                //File file = new File(resource.getAbsolutePath());
 
                 switch (request.getVerb()) {
                     //TODO: make dir if content type = null
@@ -80,7 +79,7 @@ public class ResponseFactory {
 
                         }
                         //if file already exists
-                        if (file.isFile() == true) {
+                        if (resourceFile.isFile() == true) {
                             return new NotFoundResponse(resource);
 
                         }
@@ -98,8 +97,8 @@ public class ResponseFactory {
                         }
 
                     case "DELETE":
-                        if (file.isFile() == true) {
-                            file.delete();
+                        if (resourceFile.isFile() == true) {
+                            resourceFile.delete();
                             return new DeleteResponse(resource);
                         } else {
                             System.out.println("File Doesn't exist");
@@ -131,7 +130,7 @@ public class ResponseFactory {
                     case "HEAD":
                         //if (resource.isModifiedURI() == true) {
                             //TODO: GRADING CHECKLIST - Simple caching (HEAD results in 200 with Last-Modified header)
-                            resource.setLastModified(new Date (file.lastModified()));
+                            resource.setLastModified(new Date (resourceFile.lastModified()));
                             return new HeadResponse(resource);
                         //} else return new NotModifiedResponse(resource);
                     default:
