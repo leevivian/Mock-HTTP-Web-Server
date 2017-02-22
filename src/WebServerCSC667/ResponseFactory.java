@@ -20,7 +20,7 @@ public class ResponseFactory {
 
         if (resource.isProtected() == true){
             //401 and 403 erros here
-            Htaccess hta = new Htaccess();
+            Htaccess hta = new Htaccess(resource.getHtaccessLocation());
             try {
 
                 // TODO: figure out how to use hta's isAuthorized instead of htp
