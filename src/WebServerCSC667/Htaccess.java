@@ -37,7 +37,7 @@ public class Htaccess extends ConfigurationReader {
                 case "AuthUserFile":
                     try {
                         //TODO: user is hardcoded for now, change back to temp[1] b4 submitting
-                        userFile = new Htpassword("public_html/example.htpasswd");
+                        userFile = new Htpassword("public_html/.htpasswd");
                         //userFile = new Htpassword(temp[1]);
                     } catch (IOException e) {
                         e.printStackTrace();

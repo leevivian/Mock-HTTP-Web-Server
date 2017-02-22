@@ -96,17 +96,16 @@ public class Request {
         }
     }
 
-    public void printMe() {
-        // For testing purposes
-        System.out.println("-----THIS IS A TEST from the Request class-----");
-        System.out.println("Verb:" + verb);
-        System.out.println("URI:" + uri);
-        System.out.println("Header:" + headers);
-        System.out.println("Body:" + body);
-        System.out.println("-----End of test!-----");
+    public String getIPAddress() {
+        if (headers.containsKey("X-FORWARDED-FOR")) {
+            return headers.get("X-FORWARDED-FOR").toString();
+        } else if (headers.containsKey("x-forwarded-for")) {
+            return headers.get("x-forwarded-for").toString();
+        } else if (headers.containsKey("X-Forwarded-For")) {
+            return (headers.get("X-Forwarded-For")).toString();
+        }
+        return "-";
     }
-
-    // accessors
 
     // for testing
     public static void main (String args[]){
@@ -125,7 +124,6 @@ public class Request {
         Stream<String> s = b.build();
 
         Request myReq = new Request(s);
-        myReq.printMe();
 
     }
 

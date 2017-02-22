@@ -49,8 +49,8 @@ public class ScriptResponse extends Response {
         ps.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
         ps.println("Date: " + new Date());
         ps.println("Server: CSC 667 Sailor Scouts");
+        ps.println("Content-Type: " + contentType);
         ps.println("Content-Length: " + responseBody.length());
-        ps.println(contentType);
         ps.println();
         ps.println(responseBody);
 

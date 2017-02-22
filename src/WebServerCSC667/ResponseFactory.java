@@ -24,10 +24,10 @@ public class ResponseFactory {
             try {
 
                 // TODO: How to get the location of htpassword
-                Htpassword htp = new Htpassword("public_html/example.htpasswd");
+                Htpassword htp = new Htpassword("public_html/.htpasswd");
                 if(request.getAuthHeader() == null){
                     return new UnauthorizedResponse(resource);
-                } else {
+                } else if (request.getAuthHeader() != null){
                     // Example: Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
                     String parseAuthorizationHeader[] = request.getAuthHeader().split("\\s+");
                     String encodedCredentials = parseAuthorizationHeader[1];

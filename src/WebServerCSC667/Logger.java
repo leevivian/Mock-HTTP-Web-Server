@@ -12,7 +12,6 @@ import java.util.Date;
 
 public class Logger {
     File filePath;
-    String ipAddress = "-";
 
     public Logger (String fileName){
         filePath = new File(fileName);
@@ -26,12 +25,7 @@ public class Logger {
         try {
             PrintWriter writer = new PrintWriter(new FileOutputStream(filePath, true));
 
-            // IP address of the client
-            if (request.getHeaders().containsKey("X-FORWARDED-FOR")) {
-                ipAddress = request.getHeaders().get("X-FORWARDED-FOR").toString();
-            }
-
-            writer.print(ipAddress + " ");
+            writer.print(request.getIPAddress());
 
             // Username, if password protected
 
