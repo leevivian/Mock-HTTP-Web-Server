@@ -23,7 +23,7 @@ public class ResponseFactory {
             Htaccess hta = new Htaccess();
             try {
 
-                // TODO: How to get the location of htpassword
+                // TODO: figure out how to use hta's isAuthorized instead of htp
                 Htpassword htp = new Htpassword("public_html/.htpasswd");
                 if(request.getAuthHeader() == null){
                     return new UnauthorizedResponse(resource);
@@ -67,6 +67,15 @@ public class ResponseFactory {
                 }
             } else if (!resourceFile.isFile() && !resource.isScript()) {
                 return new NotFoundResponse(resource);
+            }
+        } else if (request.getVerb().equals("PUT")) {
+            if (resource.isModifiedScriptAliasURI()) {
+                try {
+                    resource.setHeaders(request.getHeaders());
+                    return new ScriptResponse(resource, 200);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
