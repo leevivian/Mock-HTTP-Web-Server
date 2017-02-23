@@ -16,11 +16,10 @@ public class ResponseFactory {
         File resourceFile = new File(resource.getAbsolutePath());
 
         //TODO: implment error 500 - this should be a wrapper around Worker
-        //TODO: Access checks
 
         if (resource.isProtected() == true){
             //401 and 403 erros here
-            Htaccess hta = new Htaccess(resource.getHtaccessLocation());
+            Htaccess hta = new Htaccess(resource.getHtaccessPath());
             try {
 
                 // TODO: figure out how to use hta's isAuthorized instead of htp

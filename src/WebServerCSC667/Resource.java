@@ -26,6 +26,7 @@ public class Resource {
     private HashMap reqheaders;
     byte[] body = "".getBytes();
     String htacessLocation = "";
+    String htaccessFileName = "/.htaccess";
 
     public void setHeaders(HashMap headers) {
         reqheaders = headers;
@@ -56,11 +57,8 @@ public class Resource {
 
         absolutePath = myPath;
 
-
-        // TODO: Append DirIndex, do not hardcode index.html
-
         if (!myPath.contains(".") && !isScript()){
-            absolutePath = absolutePath + "index.html";
+            absolutePath = absolutePath + config.getDirectoryIndex();
         } // else absolutePath is fine just the way it is
 
         System.out.println("Absolute Path: " + absolutePath);
@@ -86,14 +84,14 @@ public class Resource {
         for (int index = 0; index < parseAbsolutePath.length; index++){
             htacessLocation += parseAbsolutePath[index] + "/";
             System.out.println(htacessLocation);
-            if (new File(htacessLocation + "/.htaccess").exists()) {
+            if (new File(htacessLocation + myConf.getAccessFileName()).exists()) {
                 return true;
             }
         }
         return false;
     }
 
-    public String getHtaccessLocation() {
+    public String getHtaccessPath() {
         return htacessLocation + "/.htaccess";
     }
 

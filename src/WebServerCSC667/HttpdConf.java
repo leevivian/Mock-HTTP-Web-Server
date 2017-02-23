@@ -11,7 +11,7 @@ public class HttpdConf extends ConfigurationReader{
     private String documentRoot = "";
     private String serverRoot = "";
     private String logFileLocaction = "";
-    private String accessFileName = "";
+    private String accessFileName = ".htaccess";
     //TODO:Correct index file used (defaults to index.html)??
     private String directoryIndex = "index.html";
     private int port = 8080;

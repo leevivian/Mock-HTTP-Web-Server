@@ -5,23 +5,8 @@ import WebServerCSC667.Resource;
 import java.io.*;
 import java.util.Date;
 
-/**
- * Created by rain2 on 2/3/2017.
- */
-
-/*HTTP_VERSION STATUS_CODE REASON_PHRASE
-HTTP_HEADERS
-BODY
-• HTTP_VERSION is the current HTTP version (ex. HTTP/1.1)
-• STATUS_CODE is a code defined by the protocol that communicates the
-status of the response (we’ll look at some of the common status codes
-over the next few slides, all are available on wiki)
-• REASON_PHRASE is the descriptive text corresponding to the status code
-• BODY is the requested response content (optional, only present if the
-Content-Length header is present)
-*/
 public class Response {
-    public int code; // status code
+    public int code;
     protected String reasonPhrase = "";
     Resource resource;
     String httpVersion = "1.1";
@@ -30,7 +15,6 @@ public class Response {
         this.sendBody = sendBody;
     }
     private boolean sendBody;
-
 
 /*
 HTTP/1.1 404 Not Found
