@@ -30,42 +30,33 @@ public class Request {
     }
 
     public void parse(){
-        boolean contentLength = false;
-        String[] arr = (myStr.toString()).split("[\n\r]+");
+        String[] requestLines = (myStr.toString()).split("[\n\r]+");
 
-        // HTTP_METHOD IDENTIFIER HTTP_VERSION
-        String[] firstLine = arr[0].split("\\s+");
+        String[] requestFirstLine = requestLines[0].split("\\s+");
 
-        if (!firstLine[0].matches("GET|POST|PUT|DELETE|HEAD")) {
-            System.out.println("1");
-        }
-
-
-
-        if (firstLine.length < 3 || !firstLine[0].matches("GET|POST|PUT|DELETE|HEAD")) {
+        if (requestFirstLine.length < 3 || !requestFirstLine[0].matches("GET|POST|PUT|DELETE|HEAD")) {
             flagBR = true;
         } else {
 
-            verb = firstLine[0];
-            uri = firstLine[1];
-            httpVersion = firstLine[2];
-
-            // TODO: If headers don't exist...
-
-            int index = 1;
+            verb = requestFirstLine[0];
+            uri = requestFirstLine[1];
+            httpVersion = requestFirstLine[2];
             headers = new HashMap();
-            while (arr[index].contains(": ") && index < arr.length - 1) { // or while != " " ?
-                String[] headersArr = arr[index].split(": ");
-                headers.put(headersArr[0], headersArr[1]);
-                index++;
-            }
 
-            // What if content-length is 0?
-            if (headers.containsKey("Content-Length") || headers.containsKey("content-length")) {
-                body = arr[index];
+            if (requestLines.length > 2) {
+                int index = 1;
+
+                while (requestLines[index].contains(": ") && index < requestLines.length - 1) { // or while != " " ?
+                    String[] headersArray = requestLines[index].split(": ");
+                    headers.put(headersArray[0], headersArray[1]);
+                    index++;
+                }
+
+                if (headers.containsKey("Content-Length") || headers.containsKey("content-length")) {
+                    body = requestLines[index];
+                }
             }
         }
-
     }
 
     public String getVerb() {

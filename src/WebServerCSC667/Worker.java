@@ -11,12 +11,10 @@ import java.util.stream.Stream;
 
 
 public class Worker extends Thread{
+
     private Socket client;
     private MimeTypes mimes;
     private HttpdConf config;
-
-    BufferedReader br;
-    Stream.Builder<String> b;
     Stream<String> s;
     Request myReq;
     Resource res;
@@ -67,7 +65,6 @@ public class Worker extends Thread{
 
     public void run(){
 
-        // Create resource
         try {
             res = new Resource(myReq.getURI(), config, mimes);
         } catch (URISyntaxException e) {
