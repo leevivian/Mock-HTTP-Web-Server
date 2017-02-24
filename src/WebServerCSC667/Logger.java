@@ -30,7 +30,7 @@ public class Logger {
 
             writer.print(inetAddress.getLocalHost().getHostAddress() + " ");
 
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss z");
+            DateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z");
             Date date = new Date();
             writer.print("[" + dateFormat.format(date) + "]" + " ");
 
