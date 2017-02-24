@@ -89,6 +89,7 @@ Content-Type: text/html; charset=iso-8859-1
         }
         */
 
+        //TODO: Needs to be changed back, because not all the following fields are supposed to added for each Response class
         ps.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
         ps.println("Date: " + new Date());
         ps.println("Server: CSC 667 Sailor Scouts");
