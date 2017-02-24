@@ -37,7 +37,7 @@ public class Htaccess extends ConfigurationReader {
                 case "AuthUserFile":
                     try {
                         //TODO: user is hardcoded for now, change back to temp[1] b4 submitting
-                        userFile = new Htpassword("public_html/.htpasswd");
+                        userFile = new Htpassword("public_html/protected/.htpasswd");
                         //userFile = new Htpassword(temp[1]);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -66,6 +66,19 @@ public class Htaccess extends ConfigurationReader {
         }
         return false;
     }
+
+    public Htpassword getHtpassword() {
+        return userFile;
+    }
+
+    public String getAuthType() {
+        return authType;
+    }
+
+    public String getAuthName() {
+        return authName;
+    }
+
     //for Tests
     @Override
     public String toString() {

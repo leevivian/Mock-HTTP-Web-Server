@@ -21,21 +21,18 @@ public class ResponseFactory {
         if (resource.isProtected() == true){
             //401 and 403 erros here
             Htaccess hta = new Htaccess(resource.getHtaccessPath());
-            try {
-                Htpassword htp = new Htpassword("public_html/.htpasswd");
-                if(request.getAuthHeader() == null){
-                    return new UnauthorizedResponse(resource);
-                } else if (request.getAuthHeader() != null){
-                    // Example: Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
-                    String parseAuthorizationHeader[] = request.getAuthHeader().split("\\s+");
-                    String encodedCredentials = parseAuthorizationHeader[1];
-                    if (htp.isAuthorized(encodedCredentials) == false) {
-                        return new ForbiddenResponse(resource);
-                    }
+            Htpassword htp = hta.getHtpassword();
+            if(request.getAuthHeader() == null){
+                return new UnauthorizedResponse(resource, hta);
+            } else if (request.getAuthHeader() != null){
+                // Example: Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
+                String parseAuthorizationHeader[] = request.getAuthHeader().split("\\s+", 2);
+                String encodedCredentials = parseAuthorizationHeader[1];
+                if (htp.isAuthorized(encodedCredentials) == false) {
+                    return new ForbiddenResponse(resource);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
 
                   /*
                     //form username, password

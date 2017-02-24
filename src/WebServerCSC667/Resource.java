@@ -58,7 +58,7 @@ public class Resource {
         absolutePath = myPath;
 
         if (!myPath.contains(".") && !isScript()){
-            absolutePath = absolutePath + config.getDirectoryIndex();
+            absolutePath = absolutePath + "/" + config.getDirectoryIndex();
         } // else absolutePath is fine just the way it is
 
         System.out.println("Absolute Path: " + absolutePath);
@@ -83,7 +83,6 @@ public class Resource {
         String[] parseAbsolutePath = absolutePath.split("/");
         for (int index = 0; index < parseAbsolutePath.length; index++){
             htacessLocation += parseAbsolutePath[index] + "/";
-            System.out.println(htacessLocation);
             if (new File(htacessLocation + myConf.getAccessFileName()).exists()) {
                 return true;
             }
@@ -96,10 +95,9 @@ public class Resource {
     }
 
     public String setContentType(String uri, MimeTypes mimeTypes){
-        //System.out.println("URI: " +uri);
+
         String[] temp = uri.split("/");
 
-        //System.out.println("LENGTH" + temp.length);
         if (temp.length < 1){
             return mimeTypes.lookup("html");
         }

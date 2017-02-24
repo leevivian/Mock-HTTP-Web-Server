@@ -1,6 +1,5 @@
 package WebServerCSC667;
 
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
@@ -46,6 +45,10 @@ public class Htpassword extends ConfigurationReader {
         String[] tokens = credentials.split( ":" );
 
         // TODO: implement this
+        if (tokens.length < 2) {
+            return false;
+        }
+
         if(verifyPassword(tokens[0],tokens[1]) == true){
             System.out.println("isAuth verify TURE");
             return true;

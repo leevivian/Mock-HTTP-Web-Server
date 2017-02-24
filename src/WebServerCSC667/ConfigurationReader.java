@@ -37,7 +37,6 @@ public class ConfigurationReader {
     public ConfigurationReader() {
     }
     public ConfigurationReader(String filename) {
-        //Creates a new File instance by converting the given pathname string into an abstract pathname.
         file = new File(filename);
         load();
     }
