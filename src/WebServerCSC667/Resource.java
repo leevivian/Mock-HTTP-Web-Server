@@ -18,6 +18,16 @@ public class Resource {
     private String docuRoot;
     private String absolutePath;
     private String contentType;
+
+    public void setEtag(int etag) {
+        Etag = etag;
+    }
+
+    public int getEtag() {
+        return Etag;
+    }
+
+    private int Etag;
     private File file;
     private String myPath = "";
     private Date lastModified;
