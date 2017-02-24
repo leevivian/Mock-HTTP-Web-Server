@@ -75,7 +75,7 @@ public class HttpdConf extends ConfigurationReader{
                         scriptAliases.put(temp[1], temp[2]);
                         break;
                     case "Listen":
-                        port = Integer.parseInt(temp[1]);
+                        port = Integer.parseInt(temp[1].trim());
                         break;
                     case "LogFile":
                         logFileLocaction = temp[1];
