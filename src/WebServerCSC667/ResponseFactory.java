@@ -142,7 +142,6 @@ public class ResponseFactory {
                 return new BadRequestResponse(resource);
         }
     } // end getResponse
-
 }
 
 

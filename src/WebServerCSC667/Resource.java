@@ -91,7 +91,7 @@ public class Resource {
     }
 
     public String getHtaccessPath() {
-        return htacessLocation + "/.htaccess";
+        return htacessLocation + myConf.getAccessFileName();
     }
 
     public String setContentType(String uri, MimeTypes mimeTypes){
