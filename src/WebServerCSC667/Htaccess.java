@@ -67,6 +67,9 @@ public class Htaccess extends ConfigurationReader {
         return false;
     }
 
+    public Htpassword getHtpasswordPath() {
+        return userFile;
+    }
     public Htpassword getHtpassword() {
         return userFile;
     }
@@ -89,6 +92,7 @@ public class Htaccess extends ConfigurationReader {
                 ", require='" + require + '\'' +
                 '}';
     }
+
 /*
     public static void main (String[] args) {
         System.out.println("TESTSTST");

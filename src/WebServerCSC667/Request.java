@@ -1,8 +1,5 @@
 package WebServerCSC667;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -113,7 +110,14 @@ public class Request {
         } else if (headers.containsKey("X-Forwarded-For")) {
             return (headers.get("X-Forwarded-For")).toString();
         }
-        return "-";
+        return null;
+    }
+    public String getIfModifiedSinceHeader() {
+        if (headers.containsKey("If-Modified-Since")) {
+            return headers.get("If-Modified-Since").toString();
+        } else {
+            return null;
+        }
     }
 
     // for testing
