@@ -13,34 +13,17 @@ import java.util.Date;
 public class HeadResponse extends Response {
     public HeadResponse (Resource resource){
         super(resource, 200);
-        reasonPhrase = "";
+        reasonPhrase = "OK";
         setSendBody(false);
     }
+
     @Override
     public String getDefaultHeader(){
         return ("Date: " + new Date() +
                 "\nServer: " + getServerName() +
                 "\nContent-Type: " + resource.getContentType() +
-                //TODO: cache-control is hard coded
-                //"\nCache-Control: private, max-age 86400 " +
-                //EntityTag etag = new EntityTag(Integer.toString(myBook.hashCode()));
+                "\nContent-Length: " +  resource.getBody().length +
                 "\nLast-Modified: " + resource.getLastModified());
     }
 
-    @Override
-    public void send(OutputStream out){
-        PrintStream ps = new PrintStream(out);
-
-        ps.println(getInitialHeader());
-        ps.println(getDefaultHeader());
-
-        ps.flush();
-        ps.close();
-        try {
-            out.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
