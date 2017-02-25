@@ -16,7 +16,6 @@ public class Htpassword extends ConfigurationReader {
 
     public Htpassword( String filename ) throws IOException {
         super( filename );
-        System.out.println( "Password file: " + filename );
 
         this.passwords = new HashMap<String, String>();
         this.load();
@@ -44,34 +43,23 @@ public class Htpassword extends ConfigurationReader {
         // The string is the key:value pair username:password
         String[] tokens = credentials.split( ":" );
 
-        // TODO: implement this
         if (tokens.length < 2) {
             return false;
         }
 
         if(verifyPassword(tokens[0],tokens[1]) == true){
-            System.out.println("isAuth verify TURE");
             return true;
-
         }
-        System.out.println("isAuth verify FALSE");
-
         return false;
     }
 
     private boolean verifyPassword( String username, String password ) {
         // encrypt the password, and compare it to the password stored
         // in the password file (keyed by username)
-        // TODO: implement this
-        System.out.println("Username: " + username);
-        System.out.println("password: " + password);
-        System.out.println("encryptClearPassword(password)" + encryptClearPassword(password));
-        System.out.println("usernamepw: "+ passwords.get(username));
+
         if (Objects.equals(encryptClearPassword(password), passwords.get(username))){
-            System.out.println("verify = true");
             return true;
         }
-        System.out.println("verify = false");
         return false;
     }
 
@@ -97,14 +85,4 @@ public class Htpassword extends ConfigurationReader {
                 e.printStackTrace();
             }
         }
-
-    public static void main (String[] args){
-        try {
-            Htpassword test = new Htpassword("./public_html/protected/.htpasswd");
-            test.verifyPassword("jrob","password");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
