@@ -75,13 +75,4 @@ public class Htaccess extends ConfigurationReader {
         return authName;
     }
 
-    public static void main (String[] args) {
-        System.out.println("TESTSTST");
-        Htaccess test = new Htaccess("./public_html/protected/.htaccess");
-        System.out.println("AUTH TYPE: " + test.getAuthType());
-        System.out.println("AUTH Name: " + test.getAuthName());
-        System.out.println("AUTH req: " + test.require);
-
-    }
-
 }
