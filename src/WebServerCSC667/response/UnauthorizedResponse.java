@@ -1,7 +1,6 @@
 package WebServerCSC667.response;
 
-import WebServerCSC667.Htaccess;
-import WebServerCSC667.Htpassword;
+import WebServerCSC667.configuration.Htaccess;
 import WebServerCSC667.Resource;
 
 import java.io.IOException;

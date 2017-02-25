@@ -1,10 +1,12 @@
 package WebServerCSC667;
 
+import WebServerCSC667.configuration.ConfigurationReader;
+
 import java.lang.*;
 import java.io.File;
 import java.util.HashMap;
 
-public class MimeTypes extends ConfigurationReader{
+public class MimeTypes extends ConfigurationReader {
 
     public HashMap<String, String> getTypes() {
         return types;

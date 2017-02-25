@@ -1,4 +1,4 @@
-package WebServerCSC667;
+package WebServerCSC667.configuration;
 
 
 import java.io.File;
@@ -67,7 +67,7 @@ public class ConfigurationReader {
 
     public void load() {
         try {
-            fileContents = new String(Files.readAllBytes(Paths.get("./conf/"+file)));
+            fileContents = new String(Files.readAllBytes(Paths.get("src/conf/"+file)));
             parse(fileContents);
         } catch (IOException e) {
             System.out.println("failed to read file");

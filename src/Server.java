@@ -1,4 +1,7 @@
-package WebServerCSC667;
+import WebServerCSC667.configuration.HttpdConf;
+import WebServerCSC667.Logger;
+import WebServerCSC667.MimeTypes;
+import WebServerCSC667.Worker;
 
 import java.io.*;
 import java.net.ServerSocket;

@@ -1,5 +1,6 @@
 package WebServerCSC667;
 
+import WebServerCSC667.configuration.HttpdConf;
 import WebServerCSC667.response.*;
 
 import java.io.BufferedReader;
@@ -17,6 +18,7 @@ public class Worker extends Thread{
     private Logger logger;
     Stream<String> s;
     Request myReq;
+    Response myResponse;
     Resource res;
 
     String completeLine = "";
@@ -81,7 +83,7 @@ public class Worker extends Thread{
         ResponseFactory rf = new ResponseFactory();
 
         try {
-            Response myResponse = rf.getResponse(myReq, res);
+            myResponse = rf.getResponse(myReq, res);
             myResponse.send(client.getOutputStream());
             logger.write(myReq, myResponse);
         } catch (IOException e) {

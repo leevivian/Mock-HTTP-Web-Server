@@ -1,5 +1,7 @@
 package WebServerCSC667;
 
+import WebServerCSC667.configuration.HttpdConf;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

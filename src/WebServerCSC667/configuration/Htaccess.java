@@ -1,4 +1,4 @@
-package WebServerCSC667;
+package WebServerCSC667.configuration;
 
 import java.io.IOException;
 import java.nio.file.Files;

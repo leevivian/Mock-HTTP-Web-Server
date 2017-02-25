@@ -1,9 +1,9 @@
-package WebServerCSC667;
+package WebServerCSC667.configuration;
 
 import java.io.File;
 import java.util.HashMap;
 
-public class HttpdConf extends ConfigurationReader{
+public class HttpdConf extends ConfigurationReader {
 
     private HashMap <String, String> aliases = new HashMap<>();
     private HashMap <String, String> scriptAliases = new HashMap<>();
