@@ -8,7 +8,7 @@ import WebServerCSC667.Resource;
 public class PutResponse extends Response {
     public PutResponse(Resource resource){
         super(resource, 201);
-        reasonPhrase = "OK";
+        reasonPhrase = "Created";
         setSendBody(true);
     }
 }

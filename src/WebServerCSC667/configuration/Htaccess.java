@@ -31,13 +31,12 @@ public class Htaccess extends ConfigurationReader {
     public void parse(String fileContents) {
         String[] tempLineSplit = fileContents.split("\n");
         for (int index = 0; index < tempLineSplit.length; index++) {
-            String[] temp = tempLineSplit[index].split(" ", 2);
-            //System.out.println(temp[0]);
+            String[] temp = tempLineSplit[index].replaceAll("\"", "").split(" ", 2);
             switch (temp[0]) {
                 case "AuthUserFile":
                     try {
                         //TODO: user is hardcoded for now, change back to temp[1] b4 submitting
-                        userFile = new Htpassword("public_html/protected/.htpasswd");
+                        userFile = new Htpassword("./public_html/protected/.htpasswd");
                         //userFile = new Htpassword(temp[1]);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -60,40 +59,20 @@ public class Htaccess extends ConfigurationReader {
         }
     }
     public boolean isAuthorized(String username, String password) {
-
         if (userFile.isAuthorized(new String (username + ":" + password)) == true){
             return true;
         }
         return false;
     }
 
-    public Htpassword getHtpasswordPath() {
+    public Htpassword getHtpassword() {
         return userFile;
     }
-
     public String getAuthType() {
         return authType;
     }
-
     public String getAuthName() {
         return authName;
     }
 
-    //for Tests
-    @Override
-    public String toString() {
-        return "Htaccess{" +
-                "userFile=" + userFile +
-                ", authType='" + authType + '\'' +
-                ", authName='" + authName + '\'' +
-                ", require='" + require + '\'' +
-                '}';
-    }
-/*
-    public static void main (String[] args) {
-        System.out.println("TESTSTST");
-        Htaccess test = new Htaccess();
-        System.out.println(test.toString());
-    }
-    */
 }

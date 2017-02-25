@@ -84,6 +84,34 @@ public class Request {
         }
     }
 
+    public String getEtag(){
+        if (headers.containsKey("Etag")){
+            return headers.get("Etag").toString();
+        }
+        else{
+            return null;
+        }
+    }
+
+    public String getCacheControl(){
+        if (headers.containsKey("Cache-Control")){
+            return headers.get("Cache-Control").toString();
+        }
+        else{
+            return null;
+        }
+    }
+
+    public String getIPAddress() {
+        if (headers.containsKey("X-FORWARDED-FOR")) {
+            return headers.get("X-FORWARDED-FOR").toString();
+        } else if (headers.containsKey("x-forwarded-for")) {
+            return headers.get("x-forwarded-for").toString();
+        } else if (headers.containsKey("X-Forwarded-For")) {
+            return (headers.get("X-Forwarded-For")).toString();
+        }
+        return null;
+    }
     public String getIfModifiedSinceHeader() {
         if (headers.containsKey("If-Modified-Since")) {
             return headers.get("If-Modified-Since").toString();
