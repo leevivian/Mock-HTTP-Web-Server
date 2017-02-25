@@ -10,13 +10,14 @@ import java.util.Date;
 
 public class ScriptResponse extends Response {
 
-    String scriptResponseBody = "";
-    String readinScriptOutputCurrentLine;
-    String contentType = null;
+    private String scriptResponseBody = "";
+    private String readinScriptOutputCurrentLine;
+    private String contentType = null;
 
     public ScriptResponse (Resource resource, int code) throws IOException{
         super(resource, code);
 
+        //splitAbsolutePath(resourceAbsolutePath);
         ProcessBuilder processBuilder = new ProcessBuilder(resource.getAbsolutePath());
         sendEnvironmentVariables(processBuilder.environment());
         Process executeScript = processBuilder.start();
@@ -26,15 +27,12 @@ public class ScriptResponse extends Response {
         contentType = readInScriptOutput.readLine();
 
         while((readinScriptOutputCurrentLine = readInScriptOutput.readLine()) != null){
-
             scriptResponseBody += readinScriptOutputCurrentLine + "\n";
-
         }
 
         resource.setBody(scriptResponseBody.getBytes());
     }
 
-    // TODO: Make this a different format
     public void sendEnvironmentVariables(Map<String, String> environment) {
 
         Iterator iterateRequestHeaders = resource.getHeaders().entrySet().iterator();
@@ -43,7 +41,12 @@ public class ScriptResponse extends Response {
             environment.put("HTTP_" + headerLine.getKey().toString().toUpperCase(), headerLine.getValue().toString().toUpperCase());
             iterateRequestHeaders.remove();
         }
+        if (resource.getQueryString() != null) {
+            environment.put("QUERY_STRING", resource.getQueryString());
+        }
     }
+
+
 
     @Override
     public void send(OutputStream out){

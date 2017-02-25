@@ -26,6 +26,7 @@ public class Resource {
     private HashMap reqheaders;
     byte[] body = "".getBytes();
     String htacessLocation = "";
+    private String queryString;
 
     public void setHeaders(HashMap headers) {
         reqheaders = headers;
@@ -56,6 +57,8 @@ public class Resource {
 
         absolutePath = myPath;
 
+        setQueryString();
+
         if (!myPath.contains(".") && !isScript()){
             absolutePath = absolutePath + "/" + config.getDirectoryIndex();
         } // else absolutePath is fine just the way it is
@@ -63,7 +66,6 @@ public class Resource {
         System.out.println("Absolute Path: " + absolutePath);
 
         try {
-            // needs encoding otherwise - URISyntaxException: Illegal character in path
             myURI = new URI(URLEncoder.encode(myPath, "UTF8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -76,6 +78,23 @@ public class Resource {
         }
         return false;
     }
+
+    public void setQueryString() {
+        if (isScript()) {
+            if (absolutePath.contains("?") && !absolutePath.substring(absolutePath.length() - 1).equals("?")) {
+                String separateScriptAndQueryString[] = absolutePath.split("\\?+");
+                absolutePath = separateScriptAndQueryString[0];
+                queryString = separateScriptAndQueryString[1];
+
+                System.out.println("QueryString" + queryString);
+            }
+        }
+    }
+
+    public String getQueryString() {
+        return queryString;
+    }
+
 
     public boolean isProtected(){
 
