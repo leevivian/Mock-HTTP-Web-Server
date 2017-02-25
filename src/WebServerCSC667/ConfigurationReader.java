@@ -11,28 +11,26 @@ import java.nio.file.Paths;
  */
 public class ConfigurationReader {
 
-    public File getFile() {
-        return file;
-    }
-
     private File file;
-
-    public void setParsedFile(String[] parsedFile) {
-        this.parsedFile = parsedFile;
-    }
-
+    String fileContents;
     private String[] parsedFile;
     private int parsedFileIndex = 0;
 
-    public String getFileContents() {
-        return fileContents;
+    public void setFile(File file) {
+        this.file = file;
     }
-
+    public void setParsedFile(String[] parsedFile) {
+        this.parsedFile = parsedFile;
+    }
     public void setFileContents(String fileContents) {
         this.fileContents = fileContents;
     }
-
-    String fileContents;
+    public File getFile() {
+        return file;
+    }
+    public String getFileContents() {
+        return fileContents;
+    }
 
     public ConfigurationReader() {
     }
@@ -50,18 +48,12 @@ public class ConfigurationReader {
         }
     }
 
-    public void setFile(File file) {
-        this.file = file;
-    }
-
     public String nextLine(){
         if (hasMoreLines() == true) {
-            String temp = parsedFile[parsedFileIndex];
+            String newLine = parsedFile[parsedFileIndex];
             parsedFileIndex++;
-            //System.out.println("nextLine TRUE");
-            return temp;
+            return newLine;
         }
-        //System.out.println("nextLine FALSE");
         return null;
     }
 
@@ -77,16 +69,6 @@ public class ConfigurationReader {
 
     public void parse(String fileContents){
         parsedFile = fileContents.split("\n");
-    }
-
-    public static void main(String args[]) {
-        ConfigurationReader test = new ConfigurationReader("httpd.conf");
-        System.out.println("hello");
-        System.out.println(test);
-        for (int i = 0; i <test.parsedFile.length; i++){
-            System.out.println(test.parsedFile[i]);
-        }
-        //System.out.println(test.nextLine());
     }
 
 }
