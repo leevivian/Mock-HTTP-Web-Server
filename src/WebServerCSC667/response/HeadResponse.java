@@ -22,7 +22,7 @@ public class HeadResponse extends Response {
                 "\nServer: " + getServerName() +
                 "\nContent-Type: " + resource.getContentType() +
                 //TODO: cache-control is hard coded
-                "\nCache-Control: private, max-age 86400 " +
+                //"\nCache-Control: private, max-age 86400 " +
                 //EntityTag etag = new EntityTag(Integer.toString(myBook.hashCode()));
                 "\nLast-Modified: " + resource.getLastModified());
     }
