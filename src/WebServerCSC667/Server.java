@@ -17,10 +17,11 @@ public class Server {
 
         socket = new ServerSocket(configuration.getPort());
         Socket connection = null;
+        Logger logAction = new Logger(configuration.getLogFileLocation());
 
         while (true) {
             connection = socket.accept();
-            Worker thread = new Worker(connection, configuration, mimeTypes);
+            new Worker(connection, configuration, mimeTypes, logAction);
             connection.close();
         }
     }

@@ -14,17 +14,19 @@ public class Worker extends Thread{
     private Socket client;
     private MimeTypes mimes;
     private HttpdConf config;
+    private Logger logger;
     Stream<String> s;
     Request myReq;
     Resource res;
 
     String completeLine = "";
 
-    public Worker(Socket socket, HttpdConf config, MimeTypes mimes) throws IOException{
+    public Worker(Socket socket, HttpdConf config, MimeTypes mimes, Logger logAction) throws IOException{
         super();
         this.mimes = mimes;
         this.config = config;
         this.client = socket;
+        this.logger = logAction;
 
         String currentLine;
         completeLine = "";
@@ -80,9 +82,8 @@ public class Worker extends Thread{
 
         try {
             Response myResponse = rf.getResponse(myReq, res);
-            myResponse.send(client.getOutputStream()); 
-            Logger logAction = new Logger(config.getLogFileLocation());
-            logAction.write(myReq, myResponse);
+            myResponse.send(client.getOutputStream());
+            logger.write(myReq, myResponse);
         } catch (IOException e) {
             e.printStackTrace();
         }
