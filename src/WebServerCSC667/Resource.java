@@ -26,7 +26,6 @@ public class Resource {
     private HashMap reqheaders;
     byte[] body = "".getBytes();
     String htacessLocation = "";
-    String htaccessFileName = "/.htaccess";
 
     public void setHeaders(HashMap headers) {
         reqheaders = headers;

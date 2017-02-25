@@ -3,10 +3,14 @@ package WebServerCSC667;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 public class BadRequest extends RuntimeException{
+
+    InetAddress inetAddress;
 
     public BadRequest(Socket socket) {
         super();
@@ -15,8 +19,7 @@ public class BadRequest extends RuntimeException{
 
             ps.println("HTTP/1.1 400 Bad Request");
             ps.println("Date: " + new Date());
-            ps.println("Server: ");
-            ps.println("Content-Type: \n");
+            ps.println("Server: " + getServerName());
 
             ps.flush();
             ps.close();
@@ -25,6 +28,15 @@ public class BadRequest extends RuntimeException{
             e.printStackTrace();
         }
 
+    }
+
+    public String getServerName() {
+        try {
+            return inetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return "Apache";
     }
 
 }

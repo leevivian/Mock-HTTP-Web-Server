@@ -1,45 +1,48 @@
 package WebServerCSC667.response;
 
 import WebServerCSC667.Resource;
-import WebServerCSC667.response.Response;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Date;
 
 public class ScriptResponse extends Response {
 
-    String currentLine;
-    String responseBody = "";
+    String scriptResponseBody = "";
+    String readinScriptOutputCurrentLine;
     String contentType = null;
 
     public ScriptResponse (Resource resource, int code) throws IOException{
         super(resource, code);
 
         ProcessBuilder processBuilder = new ProcessBuilder(resource.getAbsolutePath());
-        //processBuilder.directory(new File("/public_html/cgi-bin/perl_env"));
-        setEnvironment(processBuilder.environment());
-        Process process = processBuilder.start();
+        sendEnvironmentVariables(processBuilder.environment());
+        Process executeScript = processBuilder.start();
 
-        BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        BufferedReader readInScriptOutput = new BufferedReader(new InputStreamReader(executeScript.getInputStream()));
 
-        contentType = inStreamReader.readLine();
+        contentType = readInScriptOutput.readLine();
 
-        while((currentLine = inStreamReader.readLine()) != null){
-            //System.out.println(inStreamReader.readLine());
+        while((readinScriptOutputCurrentLine = readInScriptOutput.readLine()) != null){
 
-            responseBody += currentLine + "\n";
+            scriptResponseBody += readinScriptOutputCurrentLine + "\n";
 
         }
 
-        resource.setBody(responseBody.getBytes());
+        resource.setBody(scriptResponseBody.getBytes());
     }
 
     // TODO: Make this a different format
-    public void setEnvironment(Map<String, String> environment) {
-        resource.getHeaders().forEach((key, value) -> {
-            environment.put("HTTP_" + key.toString().toUpperCase(), value.toString().toUpperCase());
-        });
+    public void sendEnvironmentVariables(Map<String, String> environment) {
+
+        Iterator iterateRequestHeaders = resource.getHeaders().entrySet().iterator();
+        while (iterateRequestHeaders.hasNext()) {
+            Map.Entry headerLine = (Map.Entry)iterateRequestHeaders.next();
+            environment.put("HTTP_" + headerLine.getKey().toString().toUpperCase(), headerLine.getValue().toString().toUpperCase());
+            iterateRequestHeaders.remove();
+        }
     }
 
     @Override
@@ -48,19 +51,13 @@ public class ScriptResponse extends Response {
 
         ps.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
         ps.println("Date: " + new Date());
-        ps.println("Server: CSC 667 Sailor Scouts");
+        ps.println("Server: " + getServerName());
         ps.println("Content-Type: " + contentType);
-        ps.println("Content-Length: " + responseBody.length());
+        ps.println("Content-Length: " + scriptResponseBody.length());
         ps.println();
-        ps.println(responseBody);
+        ps.println(scriptResponseBody);
 
         ps.flush();
         ps.close();
-        try {
-            out.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
