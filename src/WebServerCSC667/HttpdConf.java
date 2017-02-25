@@ -12,7 +12,6 @@ public class HttpdConf extends ConfigurationReader {
     private String serverRoot = "";
     private String logFileLocaction = "";
     private String accessFileName = ".htaccess";
-    //TODO:Correct index file used (defaults to index.html)??
     private String directoryIndex = "index.html";
     private int port = 8080;
 
@@ -57,7 +56,7 @@ public class HttpdConf extends ConfigurationReader {
     public void parse() {
         String[] temp;
         while (hasMoreLines()) {
-            temp = nextLine().replaceAll("\"", "").split(" ");
+                temp = nextLine().replaceAll("\"", "").split(" ");
             if (temp.length > 1) {
                 switch (temp[0]) {
                     case "DocumentRoot":
