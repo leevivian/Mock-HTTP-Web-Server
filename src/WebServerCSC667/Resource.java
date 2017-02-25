@@ -18,15 +18,7 @@ public class Resource {
     private String docuRoot;
     private String absolutePath;
     private String contentType;
-
-    public void setEtag(int etag) {
-        Etag = etag;
-    }
-
-    public int getEtag() {
-        return Etag;
-    }
-
+    private boolean isModifiedResource = false;
     private int Etag;
     private File file;
     private String myPath = "";
@@ -37,12 +29,6 @@ public class Resource {
     byte[] body = "".getBytes();
     String htacessLocation = "";
 
-    public void setHeaders(HashMap headers) {
-        reqheaders = headers;
-    }
-    public HashMap getHeaders() {
-        return reqheaders;
-    }
 
     public Resource (String uri, HttpdConf config, MimeTypes mimeTypes) throws URISyntaxException{
 
@@ -60,17 +46,11 @@ public class Resource {
             this.myPath = docuRoot + myURIString;
         }
 
-        System.out.println("Content-type: " + contentType);
-        System.out.println("myURIString: " + myURIString);
-        System.out.println("myPath: " + this.myPath);
-
         absolutePath = myPath;
 
         if (!myPath.contains(".") && !isScript()){
             absolutePath = absolutePath + "/" + config.getDirectoryIndex();
-        } // else absolutePath is fine just the way it is
-
-        System.out.println("Absolute Path: " + absolutePath);
+        }
 
         try {
             // needs encoding otherwise - URISyntaxException: Illegal character in path
@@ -119,8 +99,7 @@ public class Resource {
         }
         return "text/text";
     }
-    //Check if uri has a scriptAlias
-    //Starts @ the end od temp[] index
+
     //TODO: Remove ghetto parse "/"
     public void checkContainsScriptAliasKey(String uri, HttpdConf config) {
         String[] temp = uri.split("/");
@@ -164,6 +143,24 @@ public class Resource {
         }
     }
 
+    public boolean isModifiedResource() {
+        return isModifiedResource;
+    }
+    public void setModifiedResource(boolean modifiedResource) {
+        isModifiedResource = modifiedResource;
+    }
+    public void setEtag(int etag) {
+        Etag = etag;
+    }
+    public int getEtag() {
+        return Etag;
+    }
+    public void setHeaders(HashMap headers) {
+        reqheaders = headers;
+    }
+    public HashMap getHeaders() {
+        return reqheaders;
+    }
     public Date getLastModified() {
         return lastModified;
     }
@@ -189,17 +186,4 @@ public class Resource {
         return modifiedURI;
     }
 
-    // TODO: Is this needed?
-    @Override
-    public String toString() {
-        return "Resource{" +
-                "\nmyURI=" + myURI +
-                ", \nmyConf=" + myConf +
-                ", \nalias='" + alias + '\'' +
-                ", \nmyURIString='" + myURIString + '\'' +
-                ", \ndocuRoot='" + docuRoot + '\'' +
-                ", \nfile=" + file +
-                ", myPath='" + myPath + '\'' +
-                '}';
-    }
 }
