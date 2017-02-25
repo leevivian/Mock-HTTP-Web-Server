@@ -20,11 +20,8 @@ public class Logger {
         filePath = new File(fileName);
     }
 
-    // Return type?
     public void write (Request request, Response response){
 
-        // Common log format from https://httpd.apache.org/docs/1.3/logs.html
-        // 127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326
         try {
             PrintWriter writer = new PrintWriter(new FileOutputStream(filePath, true));
 

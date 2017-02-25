@@ -10,9 +10,8 @@ public class HttpdConf extends ConfigurationReader{
     private HashMap <String, String> httpdConfig = new HashMap<>();
     private String documentRoot = "";
     private String serverRoot = "";
-    private String logFileLocaction = "";
+    private String logFileLocation = "";
     private String accessFileName = ".htaccess";
-    //TODO:Correct index file used (defaults to index.html)??
     private String directoryIndex = "index.html";
     private int port = 8080;
 
@@ -28,8 +27,8 @@ public class HttpdConf extends ConfigurationReader{
     public String getServerRoot() {
         return serverRoot;
     }
-    public String getLogFileLocaction() {
-        return logFileLocaction;
+    public String getLogFileLocation() {
+        return logFileLocation;
     }
     public String getDocumentRoot() {
         return documentRoot;
@@ -78,7 +77,7 @@ public class HttpdConf extends ConfigurationReader{
                         port = Integer.parseInt(temp[1].trim());
                         break;
                     case "LogFile":
-                        logFileLocaction = temp[1];
+                        logFileLocation = temp[1];
                         break;
                     case "ServerRoot":
                         serverRoot = temp[1];
@@ -103,7 +102,7 @@ public class HttpdConf extends ConfigurationReader{
                 ", \nhttpdConfig=" + httpdConfig +
                 ", \ndocumentRoot='" + documentRoot + '\'' +
                 ", \nserverRoot='" + serverRoot + '\'' +
-                ", \nlogFileLocaction='" + logFileLocaction + '\'' +
+                ", \nlogFileLocaction='" + logFileLocation + '\'' +
                 ", \nport=" + port +
                 '}';
     }

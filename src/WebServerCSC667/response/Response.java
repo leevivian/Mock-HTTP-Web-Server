@@ -106,7 +106,9 @@ Content-Type: text/html; charset=iso-8859-1
         ps.println("Date: " + new Date());
         ps.println("Server: " + getServerName());
         ps.println("Content-Type: " + resource.getContentType());
-        ps.println("Content-Length: " +  resource.getBody().length);
+        if (sendBody) {
+            ps.println("Content-Length: " +  resource.getBody().length);
+        }
         ps.println("Connection: ");
         ps.println();
         if (sendBody && !resource.getContentType().contains("image")) {

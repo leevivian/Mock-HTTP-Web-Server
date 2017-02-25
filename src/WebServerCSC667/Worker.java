@@ -81,7 +81,7 @@ public class Worker extends Thread{
         try {
             Response myResponse = rf.getResponse(myReq, res);
             myResponse.send(client.getOutputStream()); 
-            Logger logAction = new Logger(config.getLogFileLocaction());
+            Logger logAction = new Logger(config.getLogFileLocation());
             logAction.write(myReq, myResponse);
         } catch (IOException e) {
             e.printStackTrace();
