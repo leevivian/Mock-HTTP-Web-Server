@@ -33,7 +33,7 @@ public class MimeTypes extends ConfigurationReader{
             }
         }
     }
-    //TODO:: Appropriate mime type returned based on file extension (defaults to text/text if not found in mime.types)
+
     public String lookup(String extension) {
         if(this.types.get(extension) == null){
             return "text/text";
@@ -41,10 +41,4 @@ public class MimeTypes extends ConfigurationReader{
         return this.types.get(extension);
     }
 
-    public static void main(String args[]){
-        MimeTypes test = new MimeTypes( "mime.types");
-        System.out.println("TEST TYPES: " + test.types);
-        System.out.println("EXT TEST" + test.lookup("hobo"));
-
-    }
 }
