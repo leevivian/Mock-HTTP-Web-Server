@@ -17,13 +17,11 @@ public class ScriptResponse extends Response {
     public ScriptResponse (Resource resource, int code) throws IOException{
         super(resource, code);
 
-        //splitAbsolutePath(resourceAbsolutePath);
         ProcessBuilder processBuilder = new ProcessBuilder(resource.getAbsolutePath());
         sendEnvironmentVariables(processBuilder.environment());
         Process executeScript = processBuilder.start();
 
         BufferedReader readInScriptOutput = new BufferedReader(new InputStreamReader(executeScript.getInputStream()));
-
         contentType = readInScriptOutput.readLine();
 
         while((readinScriptOutputCurrentLine = readInScriptOutput.readLine()) != null){
