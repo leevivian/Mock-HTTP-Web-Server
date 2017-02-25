@@ -67,7 +67,7 @@ public class Htaccess extends ConfigurationReader {
         return false;
     }
 
-    public Htpassword getHtpassword() {
+    public Htpassword getHtpasswordPath() {
         return userFile;
     }
 

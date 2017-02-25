@@ -21,7 +21,7 @@ public class ResponseFactory {
         if (resource.isProtected() == true){
             //401 and 403 erros here
             Htaccess hta = new Htaccess(resource.getHtaccessPath());
-            Htpassword htp = hta.getHtpassword();
+            Htpassword htp = hta.getHtpasswordPath();
             if(request.getAuthHeader() == null){
                 return new UnauthorizedResponse(resource, hta);
             } else if (request.getAuthHeader() != null){
@@ -112,7 +112,7 @@ public class ResponseFactory {
 
                 //TODO:
             case "GET":
-                // if (response.isModifiedURI() == true) {
+                //if (request.getIfModifiedSinceHeader() != null) {
                 try {
                     resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
                     //System.out.println(response.getBody().)
@@ -133,7 +133,7 @@ public class ResponseFactory {
                 return new PostResponse(resource);
 
             case "HEAD":
-                //if (resource.isModifiedURI() == true) {
+                //if (request.getIfModifiedSinceHeader() != null) {
                 //TODO: GRADING CHECKLIST - Simple caching (HEAD results in 200 with Last-Modified header)
                 resource.setLastModified(new Date (resourceFile.lastModified()));
                 return new HeadResponse(resource);

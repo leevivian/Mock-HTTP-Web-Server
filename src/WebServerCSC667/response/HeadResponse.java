@@ -19,7 +19,7 @@ public class HeadResponse extends Response {
     @Override
     public String getDefaultHeader(){
         return ("Date: " + new Date() +
-                "\nServer: CSC 667 Sailor Scouts" +
+                "\nServer: " + getServerName() +
                 "\nContent-Type: " + resource.getContentType() +
                 //TODO: cache-control is hard coded
                 "\nCache-Control: private, max-age 86400 " +

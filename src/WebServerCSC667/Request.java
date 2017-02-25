@@ -1,8 +1,5 @@
 package WebServerCSC667;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -87,15 +84,12 @@ public class Request {
         }
     }
 
-    public String getIPAddress() {
-        if (headers.containsKey("X-FORWARDED-FOR")) {
-            return headers.get("X-FORWARDED-FOR").toString();
-        } else if (headers.containsKey("x-forwarded-for")) {
-            return headers.get("x-forwarded-for").toString();
-        } else if (headers.containsKey("X-Forwarded-For")) {
-            return (headers.get("X-Forwarded-For")).toString();
+    public String getIfModifiedSinceHeader() {
+        if (headers.containsKey("If-Modified-Since")) {
+            return headers.get("If-Modified-Since").toString();
+        } else {
+            return null;
         }
-        return "-";
     }
 
     // for testing
