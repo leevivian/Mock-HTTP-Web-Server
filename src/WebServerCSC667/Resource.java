@@ -36,7 +36,6 @@ public class Resource {
     private HashMap reqheaders;
     byte[] body = "".getBytes();
     String htacessLocation = "";
-    String htaccessFileName = "/.htaccess";
 
     public void setHeaders(HashMap headers) {
         reqheaders = headers;
@@ -101,7 +100,7 @@ public class Resource {
     }
 
     public String getHtaccessPath() {
-        return htacessLocation + "/.htaccess";
+        return htacessLocation + myConf.getAccessFileName();
     }
 
     public String setContentType(String uri, MimeTypes mimeTypes){

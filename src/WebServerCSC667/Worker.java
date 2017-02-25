@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
-
 public class Worker extends Thread{
 
     private Socket client;
@@ -44,11 +43,17 @@ public class Worker extends Thread{
 
         if (completeLine != "") {
             s = b.build();
-            parser();
+            try {
+                parser();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                throw new InternalServerError(client);
+            }
         }
     }
 
     public void parser() {
+
         try {
             myReq = new Request(s);
             myReq.parse();

@@ -100,7 +100,7 @@ public class Htpassword extends ConfigurationReader {
 
     public static void main (String[] args){
         try {
-            Htpassword test = new Htpassword("./public_html/.htpasswd");
+            Htpassword test = new Htpassword("./public_html/protected/.htpasswd");
             test.verifyPassword("jrob","password");
 
         } catch (IOException e) {

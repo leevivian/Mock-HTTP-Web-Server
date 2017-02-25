@@ -6,12 +6,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Logger {
+
     File filePath;
+    public InetAddress inetAddress;
 
     public Logger (String fileName){
         filePath = new File(fileName);
@@ -25,23 +28,17 @@ public class Logger {
         try {
             PrintWriter writer = new PrintWriter(new FileOutputStream(filePath, true));
 
-            writer.print(request.getIPAddress() + " ");
+            writer.print(inetAddress.getLocalHost().getHostAddress() + " ");
 
-            // Username, if password protected
-
-            // The time the server finished processing the request
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss z");
+            DateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z");
             Date date = new Date();
             writer.print("[" + dateFormat.format(date) + "]" + " ");
 
-            // HTTP_Method Identifier HTTP_Version
             writer.print("\"" + request.getVerb() + " " + request.getURI() + " " +
                            request.getHttpVersion() + "\" ");
 
-            // Status Code
             writer.print(response.code + " ");
 
-            // Size of response, not including response headers
             if (response.getContentLength() > 0) {
                   writer.print(response.getContentLength());
              } else {
