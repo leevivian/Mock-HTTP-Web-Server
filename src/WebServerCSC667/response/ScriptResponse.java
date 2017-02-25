@@ -42,6 +42,8 @@ public class ScriptResponse extends Response {
         if (resource.getQueryString() != null) {
             environment.put("QUERY_STRING", resource.getQueryString());
         }
+
+        environment.put("SERVER_PROTOCOL", "HTTP/" + httpVersion);
     }
 
 
