@@ -11,44 +11,28 @@ import java.nio.file.Paths;
  */
 public class ConfigurationReader {
 
-    private File file;
     String fileContents;
+    private File file;
     private String[] parsedFile;
     private int parsedFileIndex = 0;
 
-    public void setFile(File file) {
-        this.file = file;
-    }
-    public void setParsedFile(String[] parsedFile) {
-        this.parsedFile = parsedFile;
-    }
-    public void setFileContents(String fileContents) {
-        this.fileContents = fileContents;
-    }
-    public File getFile() {
-        return file;
-    }
-    public String getFileContents() {
-        return fileContents;
-    }
-
     public ConfigurationReader() {
     }
+
     public ConfigurationReader(String filename) {
         file = new File(filename);
         load();
     }
 
     public boolean hasMoreLines() {
-        if (parsedFile.length  > parsedFileIndex){
+        if (parsedFile.length > parsedFileIndex) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public String nextLine(){
+    public String nextLine() {
         if (hasMoreLines() == true) {
             String newLine = parsedFile[parsedFileIndex];
             parsedFileIndex++;
@@ -59,7 +43,7 @@ public class ConfigurationReader {
 
     public void load() {
         try {
-            fileContents = new String(Files.readAllBytes(Paths.get("./conf/"+file)));
+            fileContents = new String(Files.readAllBytes(Paths.get("./conf/" + file)));
             parse(fileContents);
         } catch (IOException e) {
             System.out.println("failed to read file");
@@ -67,8 +51,24 @@ public class ConfigurationReader {
         }
     }
 
-    public void parse(String fileContents){
+    public void parse(String fileContents) {
         parsedFile = fileContents.split("\n");
     }
 
+    public void setParsedFile(String[] parsedFile) {
+        this.parsedFile = parsedFile;
+    }
+    public void setFile(File file) {
+        this.file = file;
+    }
+    public void setFileContents(String fileContents) {
+        this.fileContents = fileContents;
+    }
+
+    public File getFile() {
+        return file;
+    }
+    public String getFileContents() {
+        return fileContents;
+    }
 }
