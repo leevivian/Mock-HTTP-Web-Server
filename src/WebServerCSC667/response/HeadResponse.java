@@ -7,9 +7,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 
-/**
- * Created by rain2 on 2/19/2017.
- */
 public class HeadResponse extends Response {
     public HeadResponse (Resource resource){
         super(resource, 200);

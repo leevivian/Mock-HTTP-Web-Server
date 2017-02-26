@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ResponseFactory {
@@ -90,7 +87,6 @@ public class ResponseFactory {
                 }
 
             case "GET":
-
                 try {
                     resource.setBody(Files.readAllBytes(Paths.get(resource.getAbsolutePath())));
                     resource.setLastModified(new Date(resourceFile.lastModified()));
@@ -110,11 +106,8 @@ public class ResponseFactory {
                 return new PostResponse(resource);
 
             case "HEAD":
-                //if (resource.isModifiedURI() == true) {
-                //TODO: GRADING CHECKLIST - Simple caching (HEAD results in 200 with Last-Modified header)
                 resource.setLastModified(new Date(resourceFile.lastModified()));
                 return new HeadResponse(resource);
-            //} else return new NotModifiedResponse(resource);
             default:
                 return new BadRequestResponse(resource);
         }

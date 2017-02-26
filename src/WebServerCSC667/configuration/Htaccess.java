@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-/**
- * Created by Vivian on 2/3/17.
- */
 public class Htaccess extends ConfigurationReader {
 
     private Htpassword userFile;
@@ -23,7 +20,7 @@ public class Htaccess extends ConfigurationReader {
             String fileContents = new String(Files.readAllBytes(Paths.get(htaccessLocation)));
             parse(fileContents);
         } catch (IOException e) {
-            System.out.println("failed to read file");
+            System.out.println("Failed to read file");
             e.printStackTrace();
         }
     }
@@ -52,8 +49,6 @@ public class Htaccess extends ConfigurationReader {
                     require = temp[1];
                     break;
                 default:
-                    //TODO: find default case?
-                    System.out.println("??");
                     break;
             }
         }

@@ -12,7 +12,6 @@ public class Server {
     private HttpdConf configuration;
     private MimeTypes mimeTypes;
     private ServerSocket socket;
-    private Dictionary accessFiles;
 
     public void start() throws IOException{
         configuration = new HttpdConf("httpd.conf");
@@ -31,7 +30,7 @@ public class Server {
 
 
     public static void main(String[] args) throws IOException{
-        System.out.println("hello");
+        System.out.println("Server has started.");
         Server test = new Server();
         test.start();
     }

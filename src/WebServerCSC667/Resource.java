@@ -4,27 +4,20 @@ import WebServerCSC667.configuration.HttpdConf;
 import WebServerCSC667.configuration.MimeTypes;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 
 public class Resource {
 
-    private URI myURI;
     private HttpdConf myConf;
     private MimeTypes myMimeType;
-    private String alias;
     private String myURIString;
     private String docuRoot;
     private String absolutePath;
     private String contentType;
     private boolean isModifiedResource = false;
-    private int Etag;
-    private File file;
-    private String myPath = "";
+    private String resolvedPath = "";
     private Date lastModified;
     private boolean modifiedScriptAliasURI = false;
     private boolean modifiedURI = false;
@@ -44,24 +37,17 @@ public class Resource {
         checkContainsAliasKey(uri, myConf);
         contentType = setContentType(uri, myMimeType);
 
-        // ******* RESOLVE PATH *******
         docuRoot = config.getDocumentRoot();
         if (modifiedURI == false) {
-            this.myPath = docuRoot + myURIString;
+            this.resolvedPath = docuRoot + myURIString;
         }
 
-        absolutePath = myPath;
+        absolutePath = resolvedPath;
 
         setQueryString();
 
-        if (!myPath.contains(".") && !isScript()){
+        if (!resolvedPath.contains(".") && !isScript()){
             absolutePath = absolutePath + "/" + config.getDirectoryIndex();
-        }
-
-        try {
-            myURI = new URI(URLEncoder.encode(myPath, "UTF8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         }
     }
 
@@ -78,8 +64,6 @@ public class Resource {
                 String separateScriptAndQueryString[] = absolutePath.split("\\?+");
                 absolutePath = separateScriptAndQueryString[0];
                 queryString = separateScriptAndQueryString[1];
-
-                System.out.println("QueryString" + queryString);
             }
         }
     }
@@ -122,22 +106,18 @@ public class Resource {
         return "text/text";
     }
 
-    //TODO: Remove ghetto parseRequestString "/"
     public void checkContainsScriptAliasKey(String uri, HttpdConf config) {
         String[] temp = uri.split("/");
 
         for (int i = temp.length-1; i > 0; i--) {
             if (config.getScriptAliases().containsKey("/" + temp[i] + "/")) {
-                System.out.println("KEY TESTS");
-                this.myPath = config.getScriptAliases().get("/" + temp[i] + "/");
-                System.out.println("CONFIG TESTS: " + this.myPath);
+                this.resolvedPath = config.getScriptAliases().get("/" + temp[i] + "/");
                 this.modifiedScriptAliasURI = true;
                 this.modifiedURI = true;
-
                 i++;
-                //Reapprend the rest of the URI
+
                 while (i < temp.length) {
-                    this.myPath = this.myPath + temp[i];
+                    this.resolvedPath = this.resolvedPath + temp[i];
                     i++;
                 }
                 break;
@@ -149,15 +129,12 @@ public class Resource {
 
         for (int i = temp.length-1; i > 0; i--) {
             if (config.getAliases().containsKey("/"+temp[i]+"/")) {
-                System.out.println("KEY TESTS");
-                this.myPath = config.getAliases().get("/"+temp[i]+"/");
-                System.out.println("CONFIG TESTS: "+this.myPath);
+                this.resolvedPath = config.getAliases().get("/"+temp[i]+"/");
                 this.modifiedURI = true;
-
                 i++;
-                //Reapprend the rest of the URI
+
                 while (i < temp.length){
-                    this.myPath = this.myPath + temp[i];
+                    this.resolvedPath = this.resolvedPath + temp[i];
                     i++;
                 }
                 break;
@@ -165,17 +142,8 @@ public class Resource {
         }
     }
 
-    public boolean isModifiedResource() {
-        return isModifiedResource;
-    }
     public void setModifiedResource(boolean modifiedResource) {
         isModifiedResource = modifiedResource;
-    }
-    public void setEtag(int etag) {
-        Etag = etag;
-    }
-    public int getEtag() {
-        return Etag;
     }
     public void setHeaders(HashMap headers) {
         reqheaders = headers;
@@ -203,9 +171,6 @@ public class Resource {
     }
     public boolean isModifiedScriptAliasURI() {
         return modifiedScriptAliasURI;
-    }
-    public boolean isModifiedURI() {
-        return modifiedURI;
     }
 
 }

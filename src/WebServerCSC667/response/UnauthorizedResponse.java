@@ -8,9 +8,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 
-/**
- * Created by rain2 on 2/19/2017.
- */
 public class UnauthorizedResponse extends Response {
 
     private Htaccess htaccess;
@@ -22,7 +19,6 @@ public class UnauthorizedResponse extends Response {
         this.htaccess = htaccess;
     }
 
-    // WWW-Authenticate: Basic realm="User Visible Realm"
     @Override
     public void send(OutputStream out){
         PrintStream ps = new PrintStream(out);
@@ -33,7 +29,6 @@ public class UnauthorizedResponse extends Response {
         ps.println("Content-Type: " + resource.getContentType());
         ps.println("Content-Length: " + resource.getBody().length);
         ps.println("WWW-Authenticate: " + htaccess.getAuthType() + " realm=" + htaccess.getAuthName());
-        //ps.println("WWW-Authenticate: Basic realm=\"User Visible Realm");
         ps.println();
         ps.println(resource.getBody().toString());
 

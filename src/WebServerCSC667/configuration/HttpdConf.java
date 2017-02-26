@@ -91,17 +91,4 @@ public class HttpdConf extends ConfigurationReader {
             }
         }
     }
-
-    @Override
-    public String toString() {
-        return "HttpdConf{" +
-                "\naliases=" + aliases +
-                ", \nscriptAliases=" + scriptAliases +
-                ", \nhttpdConfig=" + httpdConfig +
-                ", \ndocumentRoot='" + documentRoot + '\'' +
-                ", \nserverRoot='" + serverRoot + '\'' +
-                ", \nlogFileLocaction='" + logFileLocation + '\'' +
-                ", \nport=" + port +
-                '}';
-    }
 }

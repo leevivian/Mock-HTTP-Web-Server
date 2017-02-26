@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-/**
- * Created by rain2 on 2/7/2017.
- */
 public class ConfigurationReader {
 
     private File file;
@@ -62,7 +59,7 @@ public class ConfigurationReader {
             fileContents = new String(Files.readAllBytes(Paths.get("src/conf/"+file)));
             parse(fileContents);
         } catch (IOException e) {
-            System.out.println("failed to read file");
+            System.out.println("Failed to read file");
             e.printStackTrace();
         }
     }
