@@ -10,7 +10,7 @@ public class Request {
     private String httpVersion;
     private HashMap headers;
 
-    public boolean flagBR = false;
+    public boolean flagRequestParsingException = false;
 
     private String myStr = "";
 
@@ -32,7 +32,7 @@ public class Request {
         String[] requestFirstLine = requestLines[0].split("\\s+");
 
         if (requestFirstLine.length < 3 || !requestFirstLine[0].matches("GET|POST|PUT|DELETE|HEAD")) {
-            flagBR = true;
+            flagRequestParsingException = true;
         } else {
 
             verb = requestFirstLine[0];

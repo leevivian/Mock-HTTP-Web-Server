@@ -59,8 +59,6 @@ public class HttpdConf extends ConfigurationReader {
             temp = nextLine().split(" ");
             if (temp.length > 1) {
                 temp[1] = temp[1].replaceAll("\"", "");
-                //System.out.println(temp[1]);
-                //System.out.println(temp[0]);
                 switch (temp[0]) {
                     case "DocumentRoot":
                         documentRoot = temp[1];
@@ -105,13 +103,5 @@ public class HttpdConf extends ConfigurationReader {
                 ", \nlogFileLocaction='" + logFileLocation + '\'' +
                 ", \nport=" + port +
                 '}';
-    }
-    public static void main(String args[]) {
-        HttpdConf test = new HttpdConf("httpd.conf");
-        //System.out.println(test.parts[1]);
-        //System.out.println("ALIASES:  " + test.aliases);
-        //System.out.println("SCRIPT:  " + test.scriptAliases);
-        //System.out.println("port:" + test.port);
-        System.out.println(test.toString());
     }
 }

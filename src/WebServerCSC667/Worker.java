@@ -16,12 +16,11 @@ public class Worker extends Thread{
     private MimeTypes mimes;
     private HttpdConf config;
     private Logger logger;
-    Stream<String> s;
-    Request myReq;
-    Response myResponse;
-    Resource res;
-
-    String completeLine = "";
+    private Stream<String> s;
+    private Request request;
+    private Response response;
+    private Resource resource;
+    private String clientCompleteInput = "";
 
     public Worker(Socket socket, HttpdConf config, MimeTypes mimes, Logger logAction) throws IOException{
         super();
@@ -30,25 +29,25 @@ public class Worker extends Thread{
         this.client = socket;
         this.logger = logAction;
 
-        String currentLine;
-        completeLine = "";
+        String clientInputStreamCurrentLine;
+        clientCompleteInput = "";
         BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
         Stream.Builder<String> b = Stream.builder();
 
-        while((currentLine = br.readLine()) != null) {
+        while((clientInputStreamCurrentLine = br.readLine()) != null) {
 
-            b.accept(currentLine + "\n");
-            completeLine += currentLine;
+            b.accept(clientInputStreamCurrentLine + "\n");
+            clientCompleteInput += clientInputStreamCurrentLine;
 
-            if (currentLine.isEmpty()) {
+            if (clientInputStreamCurrentLine.isEmpty()) {
                 break;
             }
         }
 
-        if (completeLine != "") {
+        if (clientCompleteInput != "") {
             s = b.build();
             try {
-                parser();
+                parseRequest();
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 throw new InternalServerError(client);
@@ -56,13 +55,13 @@ public class Worker extends Thread{
         }
     }
 
-    public void parser() {
+    public void parseRequest() {
 
         try {
-            myReq = new Request(s);
-            myReq.parse();
+            request = new Request(s);
+            request.parse();
 
-            if (myReq.flagBR) {
+            if (request.flagRequestParsingException) {
                 throw new BadRequest(client);
             } else {
                 run();
@@ -75,7 +74,7 @@ public class Worker extends Thread{
     public void run(){
 
         try {
-            res = new Resource(myReq.getURI(), config, mimes);
+            resource = new Resource(request.getURI(), config, mimes);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -83,9 +82,9 @@ public class Worker extends Thread{
         ResponseFactory rf = new ResponseFactory();
 
         try {
-            myResponse = rf.getResponse(myReq, res);
-            myResponse.send(client.getOutputStream());
-            logger.write(myReq, myResponse);
+            response = rf.getResponse(request, resource);
+            response.send(client.getOutputStream());
+            logger.write(request, response);
         } catch (IOException e) {
             e.printStackTrace();
         }
