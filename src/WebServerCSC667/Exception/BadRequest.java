@@ -1,4 +1,4 @@
-package WebServerCSC667;
+package WebServerCSC667.Exception;
 
 import java.io.IOException;
 import java.io.OutputStream;

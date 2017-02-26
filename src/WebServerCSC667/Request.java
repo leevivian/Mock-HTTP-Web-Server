@@ -12,22 +12,22 @@ public class Request {
 
     public boolean flagRequestParsingException = false;
 
-    private String myStr = "";
+    private String requestString = "";
 
     public Request (String test){
-        myStr = test;
+        requestString = test;
     }
 
     public Request (Stream client) {
-        Iterator it =  client.iterator();
+        Iterator iterator =  client.iterator();
 
-        while (it.hasNext()) {
-            myStr += it.next().toString();
+        while (iterator.hasNext()) {
+            requestString += iterator.next().toString();
         }
     }
 
-    public void parse(){
-        String[] requestLines = (myStr.toString()).split("[\n\r]+");
+    public void parseRequestString(){
+        String[] requestLines = (requestString.toString()).split("[\n\r]+");
 
         String[] requestFirstLine = requestLines[0].split("\\s+");
 
@@ -43,7 +43,7 @@ public class Request {
             if (requestLines.length > 2) {
                 int index = 1;
 
-                while (requestLines[index].contains(": ") && index < requestLines.length - 1) { // or while != " " ?
+                while (requestLines[index].contains(": ") && index < requestLines.length - 1) {
                     String[] headersArray = requestLines[index].split(": ");
                     headers.put(headersArray[0], headersArray[1]);
                     index++;
@@ -59,22 +59,19 @@ public class Request {
     public String getVerb() {
         return verb;
     }
-
     public String getURI(){
         return uri;
     }
-
-   public String getHttpVersion() {
+    public String getHttpVersion() {
         return httpVersion;
-   }
-
-   public HashMap getHeaders() {
+    }
+    public HashMap getHeaders() {
         return headers;
-   }
+    }
 
-   public String getBody() {
+    public String getBody() {
         return body;
-   }
+    }
 
     public String getAuthHeader() {
         if (headers.containsKey("Authorization")) {
@@ -102,16 +99,6 @@ public class Request {
         }
     }
 
-    public String getIPAddress() {
-        if (headers.containsKey("X-FORWARDED-FOR")) {
-            return headers.get("X-FORWARDED-FOR").toString();
-        } else if (headers.containsKey("x-forwarded-for")) {
-            return headers.get("x-forwarded-for").toString();
-        } else if (headers.containsKey("X-Forwarded-For")) {
-            return (headers.get("X-Forwarded-For")).toString();
-        }
-        return null;
-    }
     public String getIfModifiedSinceHeader() {
         if (headers.containsKey("If-Modified-Since")) {
             return headers.get("If-Modified-Since").toString();
@@ -119,25 +106,4 @@ public class Request {
             return null;
         }
     }
-
-    // for testing
-    public static void main (String args[]){
-
-        Stream.Builder b = Stream.builder();
-        b.accept("POST / HTTP/1.1\n" +
-                "cache-control: no-cache\n" +
-                "Postman-Token: 69936131-e3f1-4e70-9a2f-dbb51d33c814\n" +
-                "User-Agent: PostmanRuntime/3.0.9\n" +
-                "Accept: */*\n" +
-                "Host: localhost:8096\n" +
-                "accept-encoding: gzip, deflate\n" +
-                "content-length: 0\n" +
-                "Connection: keep-alive");
-
-        Stream<String> s = b.build();
-
-        Request myReq = new Request(s);
-
-    }
-
 }

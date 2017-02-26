@@ -1,4 +1,4 @@
-package WebServerCSC667;
+package WebServerCSC667.configuration;
 
 import WebServerCSC667.configuration.ConfigurationReader;
 

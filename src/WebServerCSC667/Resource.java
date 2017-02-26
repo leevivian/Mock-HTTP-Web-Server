@@ -1,6 +1,7 @@
 package WebServerCSC667;
 
 import WebServerCSC667.configuration.HttpdConf;
+import WebServerCSC667.configuration.MimeTypes;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -121,7 +122,7 @@ public class Resource {
         return "text/text";
     }
 
-    //TODO: Remove ghetto parse "/"
+    //TODO: Remove ghetto parseRequestString "/"
     public void checkContainsScriptAliasKey(String uri, HttpdConf config) {
         String[] temp = uri.split("/");
 

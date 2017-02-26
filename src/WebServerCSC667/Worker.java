@@ -1,6 +1,10 @@
 package WebServerCSC667;
 
+import WebServerCSC667.Exception.BadRequest;
+import WebServerCSC667.Exception.InternalServerError;
 import WebServerCSC667.configuration.HttpdConf;
+import WebServerCSC667.configuration.Logger;
+import WebServerCSC667.configuration.MimeTypes;
 import WebServerCSC667.response.*;
 
 import java.io.BufferedReader;
@@ -59,7 +63,7 @@ public class Worker extends Thread{
 
         try {
             request = new Request(s);
-            request.parse();
+            request.parseRequestString();
 
             if (request.flagRequestParsingException) {
                 throw new BadRequest(client);

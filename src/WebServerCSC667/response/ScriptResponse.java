@@ -14,7 +14,7 @@ public class ScriptResponse extends Response {
     private String readinScriptOutputCurrentLine;
     private String contentType = null;
 
-    public ScriptResponse (Resource resource) throws IOException{
+    public ScriptResponse (Resource resource, int code) throws IOException{
         super(resource, 200);
 
         ProcessBuilder processBuilder = new ProcessBuilder(resource.getAbsolutePath());
