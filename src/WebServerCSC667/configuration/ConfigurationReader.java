@@ -56,7 +56,7 @@ public class ConfigurationReader {
 
     public void load() {
         try {
-            fileContents = new String(Files.readAllBytes(Paths.get("src/conf/"+file)));
+            fileContents = new String(Files.readAllBytes(Paths.get("./conf/"+file)));
             parse(fileContents);
         } catch (IOException e) {
             System.out.println("Failed to read file");
