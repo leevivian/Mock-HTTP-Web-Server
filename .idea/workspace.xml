@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bc785fcc-ef59-4b20-89f8-c3e1893b0637" name="Default" comment="Move public_html out">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="73630115-876c-491e-b0b4-feb42ff4e83c" name="Rejected commit: Default" comment="Update ConfigurationReader.java, still missing hasMoreLines" />
