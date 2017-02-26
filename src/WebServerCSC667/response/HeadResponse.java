@@ -15,12 +15,25 @@ public class HeadResponse extends Response {
     }
 
     @Override
-    public String getDefaultHeader(){
-        return ("Date: " + new Date() +
-                "\nServer: " + getServerName() +
-                "\nContent-Type: " + resource.getContentType() +
-                "\nContent-Length: " +  resource.getBody().length +
-                "\nLast-Modified: " + resource.getLastModified());
+    public void send(OutputStream out){
+        PrintStream printStream = new PrintStream(out);
+
+        printStream.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
+        printStream.println("Date: " + new Date());
+        printStream.println("Server: " + getServerName());
+        printStream.println("Content-Type: " + resource.getContentType());
+        printStream.println("Content-Length: " +  resource.getBody().length);
+        printStream.println("Last-Modified: " + resource.getLastModified());
+        printStream.println();
+
+        printStream.flush();
+        printStream.close();
+        try {
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

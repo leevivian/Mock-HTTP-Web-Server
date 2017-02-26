@@ -20,7 +20,7 @@ public class Worker extends Thread{
     private MimeTypes mimes;
     private HttpdConf config;
     private Logger logger;
-    private Stream<String> s;
+    private Stream<String> completeStream;
     private Request request;
     private Response response;
     private Resource resource;
@@ -35,12 +35,12 @@ public class Worker extends Thread{
 
         String clientInputStreamCurrentLine;
         clientCompleteInput = "";
-        BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        Stream.Builder<String> b = Stream.builder();
+        BufferedReader readClientInputStream = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        Stream.Builder<String> builder = Stream.builder();
 
-        while((clientInputStreamCurrentLine = br.readLine()) != null) {
+        while((clientInputStreamCurrentLine = readClientInputStream.readLine()) != null) {
 
-            b.accept(clientInputStreamCurrentLine + "\n");
+            builder.accept(clientInputStreamCurrentLine + "\n");
             clientCompleteInput += clientInputStreamCurrentLine;
 
             if (clientInputStreamCurrentLine.isEmpty()) {
@@ -49,7 +49,7 @@ public class Worker extends Thread{
         }
 
         if (clientCompleteInput != "") {
-            s = b.build();
+            completeStream = builder.build();
             try {
                 parseRequest();
             } catch (RuntimeException e) {
@@ -62,7 +62,7 @@ public class Worker extends Thread{
     public void parseRequest() {
 
         try {
-            request = new Request(s);
+            request = new Request(completeStream);
             request.parseRequestString();
 
             if (request.flagRequestParsingException) {
@@ -83,10 +83,10 @@ public class Worker extends Thread{
             e.printStackTrace();
         }
 
-        ResponseFactory rf = new ResponseFactory();
+        ResponseFactory responseFactory = new ResponseFactory();
 
         try {
-            response = rf.getResponse(request, resource);
+            response = responseFactory.getResponse(request, resource);
             response.send(client.getOutputStream());
             logger.write(request, response);
         } catch (IOException e) {

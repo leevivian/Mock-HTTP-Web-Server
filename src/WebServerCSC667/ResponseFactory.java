@@ -18,18 +18,17 @@ public class ResponseFactory {
         File resourceFile = new File(resource.getAbsolutePath());
 
         if (resource.isProtected() == true) {
-            Htaccess hta = new Htaccess(resource.getHtaccessPath());
-            Htpassword htp = hta.getHtpassword();
+            Htaccess htaccess = new Htaccess(resource.getHtaccessPath());
+            Htpassword htpassword = htaccess.getHtpassword();
             if (request.getAuthHeader() == null) {
-                return new UnauthorizedResponse(resource, hta);
+                return new UnauthorizedResponse(resource, htaccess);
             } else if (request.getAuthHeader() != null) {
                 String parseAuthorizationHeader[] = request.getAuthHeader().split("\\s+", 2);
                 String encodedCredentials = parseAuthorizationHeader[1];
-                if (htp.isAuthorized(encodedCredentials) == false) {
+                if (htpassword.isAuthorized(encodedCredentials) == false) {
                     return new ForbiddenResponse(resource);
                 }
             }
-
         }
 
         if (!request.getVerb().equals("PUT")) {
