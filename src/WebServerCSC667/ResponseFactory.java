@@ -1,7 +1,5 @@
 package WebServerCSC667;
 
-import WebServerCSC667.configuration.Htaccess;
-import WebServerCSC667.configuration.Htpassword;
 import WebServerCSC667.response.*;
 
 import java.io.File;
@@ -23,7 +21,7 @@ public class ResponseFactory {
         if (resource.isProtected() == true){
             //401 and 403 erros here
             Htaccess hta = new Htaccess(resource.getHtaccessPath());
-            Htpassword htp = hta.getHtpassword();
+            Htpassword htp = hta.getHtpasswordPath();
             if(request.getAuthHeader() == null){
                 return new UnauthorizedResponse(resource, hta);
             } else if (request.getAuthHeader() != null){
