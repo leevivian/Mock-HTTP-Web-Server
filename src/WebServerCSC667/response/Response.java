@@ -26,20 +26,6 @@ public class Response {
         this.code = code;
     }
 
-    public String getInitialHeader(){
-        return ("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
-    }
-    public String getDefaultHeader(){
-        return ("Date: " + new Date() +
-                "\nServer: CSC 667 Sailor Scouts" +
-                "\nContent-Type: " + resource.getContentType());
-    }
-    public String getResponse(){
-        return ("Content-Length: " +  resource.getBody().length +
-                "\nConnection: " +
-                "\n\n" + new String(resource.getBody()));
-    }
-
     public Integer getContentLength(){
         return resource.getBody().length;
     }
@@ -54,17 +40,17 @@ public class Response {
     }
 
     public void send(OutputStream out){
-        PrintStream ps = new PrintStream(out);
+        PrintStream printStream = new PrintStream(out);
 
-        ps.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
-        ps.println("Date: " + new Date());
-        ps.println("Server: " + getServerName());
-        ps.println("Content-Type: " + resource.getContentType());
-        ps.println("Content-Length: " +  resource.getBody().length);
-        ps.println();
+        printStream.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
+        printStream.println("Date: " + new Date());
+        printStream.println("Server: " + getServerName());
+        printStream.println("Content-Type: " + resource.getContentType());
+        printStream.println("Content-Length: " +  resource.getBody().length);
+        printStream.println();
 
         if (sendBody && !resource.getContentType().contains("image")) {
-            ps.println(new String(resource.getBody()));
+            printStream.println(new String(resource.getBody()));
         } else if (sendBody && resource.getContentType().contains("image")) {
             try {
                 out.write(resource.getBody());
@@ -73,8 +59,8 @@ public class Response {
             }
         }
 
-        ps.flush();
-        ps.close();
+        printStream.flush();
+        printStream.close();
         try {
             out.close();
 

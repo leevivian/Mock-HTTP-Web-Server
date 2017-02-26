@@ -46,21 +46,19 @@ public class ScriptResponse extends Response {
         environment.put("SERVER_PROTOCOL", "HTTP/" + httpVersion);
     }
 
-
-
     @Override
     public void send(OutputStream out){
-        PrintStream ps = new PrintStream(out);
+        PrintStream printStream = new PrintStream(out);
 
-        ps.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
-        ps.println("Date: " + new Date());
-        ps.println("Server: " + getServerName());
-        ps.println("Content-Type: " + contentType);
-        ps.println("Content-Length: " + scriptResponseBody.length());
-        ps.println();
-        ps.println(scriptResponseBody);
+        printStream.println("HTTP/" + httpVersion + " " + code + " " + reasonPhrase);
+        printStream.println("Date: " + new Date());
+        printStream.println("Server: " + getServerName());
+        printStream.println("Content-Type: " + contentType);
+        printStream.println("Content-Length: " + scriptResponseBody.length());
+        printStream.println();
+        printStream.println(scriptResponseBody);
 
-        ps.flush();
-        ps.close();
+        printStream.flush();
+        printStream.close();
     }
 }

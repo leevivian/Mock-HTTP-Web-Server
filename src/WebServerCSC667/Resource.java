@@ -10,9 +10,9 @@ import java.util.HashMap;
 
 public class Resource {
 
-    private HttpdConf myConf;
-    private MimeTypes myMimeType;
-    private String myURIString;
+    private HttpdConf configuration;
+    private MimeTypes mimeType;
+    private String uriString;
     private String docuRoot;
     private String absolutePath;
     private String contentType;
@@ -29,21 +29,20 @@ public class Resource {
 
     public Resource (String uri, HttpdConf config, MimeTypes mimeTypes) throws URISyntaxException{
 
-        myConf = config;
-        myURIString = uri;
-        myMimeType = mimeTypes;
+        configuration = config;
+        uriString = uri;
+        mimeType = mimeTypes;
 
-        checkContainsScriptAliasKey(uri, myConf);
-        checkContainsAliasKey(uri, myConf);
-        contentType = setContentType(uri, myMimeType);
-
+        checkContainsScriptAliasKey(uri, configuration);
+        checkContainsAliasKey(uri, configuration);
+        contentType = setContentType(uri, mimeType);
         docuRoot = config.getDocumentRoot();
+
         if (modifiedURI == false) {
-            this.resolvedPath = docuRoot + myURIString;
+            this.resolvedPath = docuRoot + uriString;
         }
 
         absolutePath = resolvedPath;
-
         setQueryString();
 
         if (!resolvedPath.contains(".") && !isScript()){
@@ -52,41 +51,22 @@ public class Resource {
     }
 
     public boolean isScript(){
-        if ((modifiedScriptAliasURI == true) && (myConf.getScriptAliases() != null)) {
+        if ((modifiedScriptAliasURI == true) && (configuration.getScriptAliases() != null)) {
             return true;
         }
         return false;
     }
-
-    public void setQueryString() {
-        if (isScript()) {
-            if (absolutePath.contains("?") && !absolutePath.substring(absolutePath.length() - 1).equals("?")) {
-                String separateScriptAndQueryString[] = absolutePath.split("\\?+");
-                absolutePath = separateScriptAndQueryString[0];
-                queryString = separateScriptAndQueryString[1];
-            }
-        }
-    }
-
-    public String getQueryString() {
-        return queryString;
-    }
-
 
     public boolean isProtected(){
 
         String[] parseAbsolutePath = absolutePath.split("/");
         for (int index = 0; index < parseAbsolutePath.length; index++){
             htacessLocation += parseAbsolutePath[index] + "/";
-            if (new File(htacessLocation + myConf.getAccessFileName()).exists()) {
+            if (new File(htacessLocation + configuration.getAccessFileName()).exists()) {
                 return true;
             }
         }
         return false;
-    }
-
-    public String getHtaccessPath() {
-        return htacessLocation + myConf.getAccessFileName();
     }
 
     public String setContentType(String uri, MimeTypes mimeTypes){
@@ -124,6 +104,7 @@ public class Resource {
             }
         }
     }
+
     public void checkContainsAliasKey(String uri, HttpdConf config){
         String[] temp = uri.split("/");
 
@@ -138,6 +119,16 @@ public class Resource {
                     i++;
                 }
                 break;
+            }
+        }
+    }
+
+    public void setQueryString() {
+        if (isScript()) {
+            if (absolutePath.contains("?") && !absolutePath.substring(absolutePath.length() - 1).equals("?")) {
+                String separateScriptAndQueryString[] = absolutePath.split("\\?+");
+                absolutePath = separateScriptAndQueryString[0];
+                queryString = separateScriptAndQueryString[1];
             }
         }
     }
@@ -171,6 +162,12 @@ public class Resource {
     }
     public boolean isModifiedScriptAliasURI() {
         return modifiedScriptAliasURI;
+    }
+    public String getQueryString() {
+        return queryString;
+    }
+    public String getHtaccessPath() {
+        return htacessLocation + configuration.getAccessFileName();
     }
 
 }
