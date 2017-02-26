@@ -10,9 +10,6 @@ import java.util.Date;
 public class Response {
     public int code;
     protected String reasonPhrase = "";
-    public void setSendBody(boolean sendBody) {
-        this.sendBody = sendBody;
-    }
     private boolean sendBody;
     Resource resource;
     String httpVersion = "1.1";
@@ -37,6 +34,10 @@ public class Response {
             e.printStackTrace();
         }
         return "Apache";
+    }
+
+    public void setSendBody(boolean sendBody) {
+        this.sendBody = sendBody;
     }
 
     public void send(OutputStream out){
