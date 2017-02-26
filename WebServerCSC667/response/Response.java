@@ -64,7 +64,6 @@ public class Response {
         printStream.close();
         try {
             out.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
