@@ -1,5 +1,5 @@
-# Web Server Project
+## Mock HTTP Web Server
 
-## Overview
-The purpose of this project is to write a web server application capable of a subset of
-the HyperText Transfer Protocol.
+### Overview
+
+A Java application that mocks a subset of Apache's HyperText Transfer Protocol, handling various requests such as GET/PUT/POST/DELETE, and returning an appropriate response.
